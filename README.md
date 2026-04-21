@@ -22,23 +22,21 @@ O campo `revisado` é armazenado como inteiro (0 ou 1) pois o SQLite não tem ti
 
 ## Endpoints
 
-- POST /auth/token
-Autentica um técnico e retorna um JWT.
+- POST /auth/token - Autentica um técnico e retorna um JWT.
 
-- GET /children
-Lista todas as crianças com suporte a filtros e paginação.
+- GET /children - Lista todas as crianças com suporte a filtros e paginação.
 
-- GET /children/:id
-Retorna o detalhe completo de uma criança.
+- GET /children/:id - Retorna o detalhe completo de uma criança.
 
-- GET /summary
-Lista os dados agregados para o painel.
+- GET /summary - Lista os dados agregados para o painel.
 
+- PATCH /children/:id/review - Marca uma criança como revisada com a autenticação JWT.
 
 ### Autenticação JWT
 
-A autenticação é feita via JWT (JSON Web Token). O token é gerado no endpoint `POST /auth/token` e deve ser enviado no header: "Authorization: Bearer <token>" que contém todas suas rotas protegidas. O token contém: `preferred_username`, `iat` (data da geração), `exp` (data de expiração).
-Além disso os erros retornam resultados diferente para facilitar na integração com o front, como token inválido, expirado ou não fornecido.
+A autenticação é feita via JWT (JSON Web Token). O token é gerado no endpoint `POST /auth/token` e deve ser enviado no header: `Authorization: Bearer <token>` em todas as rotas protegidas. O token contém: `preferred_username`, `iat` (data da geração), `exp` (data de expiração).
+
+Além disso os erros retornam mensagens diferentes para facilitar a integração com o frontend, como token inválido, expirado ou não fornecido.
 
 ### Como rodar
 

@@ -64,4 +64,38 @@ function getChild(req, res) {
   return res.json(parseChild(row))
 }
 
-module.exports = { listChildren, getChild }
+function reviewChild(req, res) {
+  const { id } = req.params
+  const { preferred_username } = req.user
+
+  if (!preferred_username) {
+    return res.status(401).json({ error: 'Usuário inválido no token' })
+  }
+
+  const row = db.prepare('SELECT * FROM children WHERE id = ?').get(id)
+
+  if (!row) {
+    return res.status(404).json({ error: 'Criança não encontrada' })
+  }
+
+  if (row.revisado === 1) {
+    return res.json(parseChild(row))
+  }
+
+  db.prepare(`
+    UPDATE children
+    SET revisado = 1,
+        revisado_por = ?,
+        revisado_em = ?
+    WHERE id = ?
+  `).run(preferred_username, new Date().toISOString(), id)
+
+  const updated = db.prepare('SELECT * FROM children WHERE id = ?').get(id)
+
+  return res.status(200).json({
+    message: 'Caso revisado com sucesso',
+    data: parseChild(updated)
+  })
+}
+
+module.exports = { listChildren, getChild, reviewChild }
