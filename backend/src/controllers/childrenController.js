@@ -30,6 +30,7 @@ function listChildren(req, res) {
   const pageNum = Number(page)
   const limitNum = Number(limit)
   const revisadoBool = parseBoolean(revisado)
+  const alertasBool = parseBoolean(alertas)
 
   if (isNaN(pageNum) || pageNum < 1) {
     return res.status(400).json({ message: 'page inválido' })
@@ -45,12 +46,16 @@ function listChildren(req, res) {
     children = children.filter(c => c.bairro === bairro)
   }
 
-  if (alertas === 'true') {
+  if (alertasBool === true) {
     children = children.filter(hasAlert)
   }
 
-  if (revisado !== undefined) {
-    children = children.filter(c => c.revisado === (revisado === 'true'))
+  if (alertasBool === false) {
+    children = children.filter(c => !hasAlert(c))
+  }
+
+  if (revisadoBool !== undefined) {
+    children = children.filter(c => c.revisado === revisadoBool)
   }
 
   const total = children.length
