@@ -1,0 +1,67 @@
+const db = require('../database/index')
+
+function parseChild(row) {
+  return {
+    ...row,
+    saude: row.saude ? JSON.parse(row.saude) : null,
+    educacao: row.educacao ? JSON.parse(row.educacao) : null,
+    assistencia_social: row.assistencia_social ? JSON.parse(row.assistencia_social) : null,
+    revisado: row.revisado === 1,
+  }
+}
+
+function hasAlert(c) {
+  return (
+    (Array.isArray(c.saude?.alertas) && c.saude.alertas.length > 0) ||
+    (Array.isArray(c.educacao?.alertas) && c.educacao.alertas.length > 0) ||
+    (Array.isArray(c.assistencia_social?.alertas) && c.assistencia_social.alertas.length > 0)
+  )
+}
+
+function listChildren(req, res) {
+  const { bairro, alertas, revisado, page = 1, limit = 25 } = req.query
+
+  const pageNum = Number(page)
+  const limitNum = Number(limit)
+
+  let children = db.prepare('SELECT * FROM children').all().map(parseChild)
+
+  if (bairro) {
+    children = children.filter(c => c.bairro === bairro)
+  }
+
+  if (alertas === 'true') {
+    children = children.filter(hasAlert)
+  }
+
+  if (revisado !== undefined) {
+    children = children.filter(c => c.revisado === (revisado === 'true'))
+  }
+
+  const total = children.length
+  const start = (pageNum - 1) * limitNum
+  const data = children.slice(start, start + limitNum)
+
+  return res.json({
+    data,
+    meta: {
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum)
+    }
+  })
+}
+
+function getChild(req, res) {
+  const { id } = req.params
+  const row = db.prepare('SELECT * FROM children WHERE id = ?').get(id)
+
+  if (!row) {
+    return res.status(404).json({ error: 'Criança não encontrada' })
+  }
+
+  return res.json(parseChild(row))
+}
+
+module.exports = { listChildren, getChild }

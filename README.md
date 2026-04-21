@@ -20,6 +20,17 @@ Os dados das três áreas de acompanhamento (saúde, educação e assistência s
 
 O campo `revisado` é armazenado como inteiro (0 ou 1) pois o SQLite não tem tipo booleano nativo.
 
+## Endpoints
+
+### POST /auth/token
+Autentica um técnico e retorna um JWT.
+
+### GET /children
+Lista todas as crianças com suporte a filtros e paginação.
+
+### GET /children/:id
+Retorna o detalhe completo de uma criança.
+
 
 ### Como rodar
 
