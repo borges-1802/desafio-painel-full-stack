@@ -1,6 +1,6 @@
 # Desafio Técnico - Full Stack Pleno da Prefeitura do Rio
 
-Adicionando estrurura inicial de pastas para construção de um painel de acompanhamento de crianças em vulnerabilidade.
+Adicionando documentação do backend atual:
 
 ## Dependencias do backend
 - **Express** - framework HTTP para criação das rotas e servidor
@@ -22,21 +22,88 @@ O campo `revisado` é armazenado como inteiro (0 ou 1) pois o SQLite não tem ti
 
 ## Endpoints
 
-- POST /auth/token - Autentica um técnico e retorna um JWT.
+### POST /auth/token
+Autentica um técnico e retorna um JWT.
 
-- GET /children - Lista todas as crianças com suporte a filtros e paginação.
+**Body:**
+```json
+{
+  "email": "tecnico@prefeitura.rio",
+  "senha": "painel@2024"
+}
+```
 
-- GET /children/:id - Retorna o detalhe completo de uma criança.
+**Resposta:**
+```json
+{
+  "token": "JWT_TOKEN"
+}
+```
 
-- GET /summary - Lista os dados agregados para o painel.
+> **Observação:** o campo de senha no body é `senha` (em português).
 
-- PATCH /children/:id/review - Marca uma criança como revisada com a autenticação JWT.
+---
+
+### GET /children
+Lista todas as crianças com suporte a filtros e paginação.
+
+**Query params:**
+- `bairro` - filtra por bairro
+- `alertas=true|false` - filtra crianças com ou sem alertas
+- `revisado=true|false` - filtra por status de revisão
+- `page` - número da página (padrão: 1)
+- `limit` - quantidade por página (padrão: 25)
+
+---
+
+### GET /children/:id
+Retorna o detalhe completo de uma criança.
+
+---
+
+### GET /summary
+Retorna dados agregados para o painel.
+
+**Resposta:**
+```json
+{
+  "total": 25,
+  "revisados": 4,
+  "com_alertas": 17,
+  "alertas_por_area": {
+    "saude": 8,
+    "educacao": 9,
+    "assistencia_social": 8
+  }
+}
+```
+
+---
+
+### PATCH /children/:id/review
+Marca uma criança como revisada. Requer autenticação JWT.
+
+**Resposta:**
+```json
+{
+  "message": "Caso revisado com sucesso",
+  "data": { ... }
+}
+```
+
+---
 
 ### Autenticação JWT
 
-A autenticação é feita via JWT (JSON Web Token). O token é gerado no endpoint `POST /auth/token` e deve ser enviado no header: `Authorization: Bearer <token>` em todas as rotas protegidas. O token contém: `preferred_username`, `iat` (data da geração), `exp` (data de expiração).
+A autenticação é feita via JWT (JSON Web Token). O token é gerado no endpoint `POST /auth/token` e deve ser enviado no header `Authorization: Bearer <token>` em todas as rotas protegidas. O token contém `preferred_username`, `iat` (data de geração) e `exp` (data de expiração).
 
-Além disso os erros retornam mensagens diferentes para facilitar a integração com o frontend, como token inválido, expirado ou não fornecido.
+A API retorna mensagens claras para facilitar a integração com o frontend:
+- `Token não fornecido`
+- `Token inválido`
+- `Token expirado`
+- `Criança não encontrada`
+- `page inválido`
+- `limit inválido`
 
 ### Como rodar
 
