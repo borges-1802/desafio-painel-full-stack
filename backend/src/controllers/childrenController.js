@@ -18,11 +18,26 @@ function hasAlert(c) {
   )
 }
 
+function parseBoolean(value) {
+  if (value === 'true') return true
+  if (value === 'false') return false
+  return undefined
+}
+
 function listChildren(req, res) {
   const { bairro, alertas, revisado, page = 1, limit = 25 } = req.query
 
   const pageNum = Number(page)
   const limitNum = Number(limit)
+  const revisadoBool = parseBoolean(revisado)
+
+  if (isNaN(pageNum) || pageNum < 1) {
+    return res.status(400).json({ message: 'page inválido' })
+  }
+
+  if (isNaN(limitNum) || limitNum < 1) {
+    return res.status(400).json({ message: 'limit inválido' })
+  }
 
   let children = db.prepare('SELECT * FROM children').all().map(parseChild)
 
