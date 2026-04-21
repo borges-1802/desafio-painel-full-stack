@@ -1,4 +1,6 @@
 const db = require('../index')
+const fs = require('fs')
+const path = require('path')
 
 function runSeed() {
   db.exec(`
@@ -17,7 +19,32 @@ function runSeed() {
     )
   `)
 
-  console.log('Tabela criada!')
+  const seedPath = path.resolve(__dirname, '../../../data/seed.json')
+  const children = JSON.parse(fs.readFileSync(seedPath, 'utf-8'))
+
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO children (
+      id, nome, data_nascimento, bairro, responsavel,
+      saude, educacao, assistencia_social,
+      revisado, revisado_por, revisado_em
+    ) VALUES (
+      @id, @nome, @data_nascimento, @bairro, @responsavel,
+      @saude, @educacao, @assistencia_social,
+      @revisado, @revisado_por, @revisado_em
+    )
+  `)
+
+  for (const child of children) {
+    insert.run({
+      ...child,
+      saude: child.saude ? JSON.stringify(child.saude) : null,
+      educacao: child.educacao ? JSON.stringify(child.educacao) : null,
+      assistencia_social: child.assistencia_social ? JSON.stringify(child.assistencia_social) : null,
+      revisado: child.revisado ? 1 : 0,
+    })
+  }
+
+  console.log(`${children.length} crianças carregadas no banco!`)
 }
 
 module.exports = runSeed
