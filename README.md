@@ -3,12 +3,23 @@
 Adicionando estrurura inicial de pastas para construção de um painel de acompanhamento de crianças em vulnerabilidade.
 
 ## Dependencias do backend
-- **Express** — framework HTTP para criação das rotas e servidor
-- **better-sqlite3** — banco de dados SQLite simples e sem servidor separado
-- **jsonwebtoken** — geração e verificação de tokens JWT para autenticação
-- **dotenv** — gerenciamento de variáveis de ambiente
-- **cors** — liberação de requisições entre frontend (3000) e backend (3001)
-- **nodemon** — reinício automático do servidor em desenvolvimento
+- **Express** - framework HTTP para criação das rotas e servidor
+- **better-sqlite3** - banco de dados SQLite simples e sem servidor separado
+- **jsonwebtoken** - geração e verificação de tokens JWT para autenticação
+- **dotenv** - gerenciamento de variáveis de ambiente
+- **cors** - liberação de requisições entre frontend (3000) e backend (3001)
+- **nodemon** - reinício automático do servidor em desenvolvimento
+
+## Estrutura do banco de dados
+
+Inicialmente o PostgreSQL foi pensado para ser o banco de dados, porém o **SQLite** foi escolhido por não exigir um servidor separado, por funcionar bem no Docker e pelo "pequeno" volume de dados do projeto;
+
+O banco de dados é um arquivo SQLite gerado automaticamente em `data/banco.db` na primeira execução com a criação da tabela children.
+
+Os dados das três áreas de acompanhamento (saúde, educação e assistência social) são armazenados como JSON dentro de colunas TEXT, de forma para simplificar a estrutura do banco, já que os dados são lidos e escritos sempre juntos e o volume de registros é pequeno.
+
+O campo `revisado` é armazenado como inteiro (0 ou 1) pois o SQLite não tem tipo booleano nativo.
+
 
 ### Como rodar
 
