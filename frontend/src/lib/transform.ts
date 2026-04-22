@@ -1,8 +1,8 @@
-import { Child, ChildListItem, AreaStatus } from '@/types'
+import { Child, ChildListItem, AreaStatus, SocialData, HealthData, EducationData } from '@/types'
 
-function getAreaStatus(area: any): AreaStatus {
+function getAreaStatus(area: HealthData | EducationData | SocialData | null): AreaStatus {
     if (!area) return 'sem_dados'
-    if (area.alertas?.length > 0) return 'alerta'
+    if (area.alertas && area.alertas.length > 0) return 'alerta'
     return 'ok'
 }
 

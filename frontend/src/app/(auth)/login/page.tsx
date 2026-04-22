@@ -43,8 +43,8 @@ export default function LoginPage() {
         const { token } = await authApi.login(values)
         localStorage.setItem('token', token)
         router.replace('/dashboard')
-        } catch (err: any) {
-        setError(err.message || 'Erro ao fazer login')
+        } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Erro ao fazer login')
         }
     }
 
