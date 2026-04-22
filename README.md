@@ -112,3 +112,15 @@ cd backend
 npm install
 npm run dev
 ```
+
+## Dependências do frontend
+
+- **Next.js 14+** e **Tailwind CSS**
+- **shadcn/ui** - biblioteca de componentes acessíveis baseada em Radix UI
+- **axios** - cliente HTTP para consumo da API
+- **@tanstack/react-query** - gerenciamento de cache e estado de dados assíncronos
+- **react-hook-form** - gerenciamento de formulários
+- **zod** - validação de esquemas e formulários
+- **lucide-react** - ícones
+- **recharts** - gráficos e visualizações
+- **sonner** - notificações de feedback visual
