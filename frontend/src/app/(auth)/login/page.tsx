@@ -26,7 +26,14 @@ export default function LoginPage() {
 
     useEffect(() => {
         const token = localStorage.getItem('token')
-        if (token) router.replace('/dashboard')
+        if (!token) return
+        try {
+            const { exp } = JSON.parse(atob(token.split('.')[1]))
+            if (exp * 1000 > Date.now()) router.replace('/dashboard')
+            else localStorage.removeItem('token')
+        } catch {
+            localStorage.removeItem('token')
+        }
     }, [router])
 
     const {
