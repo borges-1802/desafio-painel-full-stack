@@ -46,6 +46,10 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-rio-blue: #13335a;
+  --color-rio-blue-mid: #2a688f;
+  --color-rio-cyan: #42b9eb;
+  --color-rio-gray: #eceded
 }
 
 :root {
