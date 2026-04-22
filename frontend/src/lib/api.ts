@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { ChildrenFilters, ChildrenResponse, Child, Summary, LoginCredentials, LoginResponse, ReviewResponse } from '@/types'
+import { getToken, removeToken } from './auth'
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
@@ -8,7 +9,7 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
     if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('token')
+        const token = getToken()
         if (token) {
             config.headers.Authorization = `Bearer ${token}`
         }
@@ -23,7 +24,7 @@ api.interceptors.response.use(
             if (error.response?.status === 401) {
                 const isLoginRoute = error.config?.url?.includes('/auth/token')
                 if (!isLoginRoute) {
-                    localStorage.removeItem('token')
+                    removeToken()
                     window.location.href = '/login'
                 }
             }

@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { setToken, hasToken } from '@/lib/auth'
 
 const loginSchema = z.object({
     email: z.string().email('E-mail inválido'),
@@ -25,15 +26,7 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
-        if (!token) return
-        try {
-            const { exp } = JSON.parse(atob(token.split('.')[1]))
-            if (exp * 1000 > Date.now()) router.replace('/dashboard')
-            else localStorage.removeItem('token')
-        } catch {
-            localStorage.removeItem('token')
-        }
+        if (hasToken()) router.replace('/dashboard')
     }, [router])
 
     const {
@@ -46,12 +39,13 @@ export default function LoginPage() {
 
     async function onSubmit(values: LoginForm) {
         try {
-        setError(null)
-        const { token } = await authApi.login(values)
-        localStorage.setItem('token', token)
-        router.replace('/dashboard')
+            setError(null)
+            const { token } = await authApi.login(values)
+            setToken(token)
+            router.replace('/dashboard')
         } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Erro ao fazer login')
+            const message = err instanceof Error ? err.message : 'Erro ao fazer login'
+            setError(message)
         }
     }
 

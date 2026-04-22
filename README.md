@@ -124,3 +124,20 @@ npm run dev
 - **lucide-react** - ícones
 - **recharts** - gráficos e visualizações
 - **sonner** - notificações de feedback visual
+
+
+### Decisões arquiteturais
+
+- **Cookies** ao invés de `localStorage` para armazenar o JWT que é mais seguro e funciona no middleware server-side do Next.js
+- **Middleware do Next.js** para proteção de rotas, ele redireciona para `/login` se o token estiver ausente ou expirado, sem depender do client-side
+- **`auth.ts`** centraliza toda a lógica de token com `getToken`, `setToken`, `removeToken` e `hasToken` em um único lugar
+- **Fonte Inter** — escolhida por legibilidade em interfaces institucionais e suporte a acessibilidade (WCAG AA), em detrimento da fonte oficial da Prefeitura Cera Pro que é paga
+- **Identidade visual** baseada no Manual de Marca 2025 da Prefeitura do Rio
+
+### Como rodar
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
