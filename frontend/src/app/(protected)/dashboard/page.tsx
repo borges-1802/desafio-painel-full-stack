@@ -1,8 +1,17 @@
+import SummaryCards from '@/components/dashboard/SummaryCards'
+
 export default function DashboardPage() {
-  return (
-    <div className="p-8">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">Bem-vindo ao painel.</p>
-    </div>
-  )
+    return (
+        <main className="max-w-6xl mx-auto px-4 py-8">
+            <div className="mb-8">
+                <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+                    Painel de Acompanhamento
+                </h1>
+                <p className="text-muted-foreground text-sm mt-1">
+                    Visão geral das crianças em situação de vulnerabilidade social
+                </p>
+            </div>
+            <SummaryCards />
+        </main>
+    )
 }
