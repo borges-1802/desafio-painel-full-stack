@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { LayoutDashboard, Users, LogOut, User, Menu, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
-import { removeToken, getToken } from '@/lib/auth'
+import { removeToken, useToken } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -13,21 +13,28 @@ const navItems = [
     { href: '/children', label: 'Crianças', icon: Users },
 ]
 
-function NavContent({ collapsed, onNavigate }: { collapsed?: boolean, onNavigate?: () => void }) {
-    const pathname = usePathname()
-    const router = useRouter()
-    const [email, setEmail] = useState<string | null>(null)
+  
+function decodePreferredUsername(token?: string): string | null {
+  if (!token) return null
+  try {
+    const payloadBase64Url = token.split('.')[1]
+    if (!payloadBase64Url) return null
 
-    useEffect(() => {
-      const token = getToken()
-      if (!token) return
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]))
-        setEmail(payload.preferred_username || null)
-      } catch {
-        setEmail(null)
-      }
-    }, [])
+    const base64 = payloadBase64Url.replace(/-/g, '+').replace(/_/g, '/')
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=')
+
+    const payload = JSON.parse(atob(padded))
+    return payload.preferred_username ?? null
+  } catch {
+    return null
+  }
+}
+
+function NavContent({ collapsed, onNavigate }: { collapsed?: boolean, onNavigate?: () => void }) {
+  const pathname = usePathname()
+  const router = useRouter()
+  const token = useToken()
+  const email = decodePreferredUsername(token)
 
     function handleLogout() {
       removeToken()
@@ -51,7 +58,7 @@ function NavContent({ collapsed, onNavigate }: { collapsed?: boolean, onNavigate
             href={href}
             onClick={onNavigate}
             className={cn('flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors',
-              collapsed && 'justify-center px-2', pathname === href
+              collapsed && 'justify-center px-2', pathname.startsWith(href)
               ? 'bg-rio-blue text-white font-medium' : 'text-muted-foreground hover:text-foreground hover:bg-accent'
             )}
             title={collapsed ? label : undefined}>
