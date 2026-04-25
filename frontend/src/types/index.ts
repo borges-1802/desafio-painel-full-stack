@@ -89,3 +89,24 @@ export interface ReviewResponse {
     message: string
     data: Child
 }
+
+export interface AlertaDetalhe {
+  alerta: string
+  total: number
+}
+
+export interface Summary {
+  total: number
+  revisados: number
+  com_alertas: number
+  alertas_por_area: {
+    saude: number
+    educacao: number
+    assistencia_social: number
+  }
+  detalhes_alertas: {
+    saude: AlertaDetalhe[]
+    educacao: AlertaDetalhe[]
+    assistencia_social: AlertaDetalhe[]
+  }
+}

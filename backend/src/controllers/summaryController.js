@@ -9,6 +9,17 @@ function parseRow(row) {
   }
 }
 
+function contarAlertas(children, area) {
+  const contagem = {}
+  for (const c of children) {
+    const alertas = c[area]?.alertas || []
+    for (const alerta of alertas) {
+      contagem[alerta] = (contagem[alerta] || 0) + 1
+    }
+  }
+  return Object.entries(contagem).map(([alerta, total]) => ({ alerta, total }))
+}
+
 function getSummary(req, res) {
   const rows = db.prepare('SELECT * FROM children').all()
   const total = rows.length
@@ -18,6 +29,8 @@ function getSummary(req, res) {
   let alertas_saude = 0
   let alertas_educacao = 0
   let alertas_assistencia = 0
+
+  const parsed = rows.map(parseRow)
 
   for (const row of rows) {
     const c = parseRow(row)
@@ -42,6 +55,11 @@ function getSummary(req, res) {
       saude: alertas_saude,
       educacao: alertas_educacao,
       assistencia_social: alertas_assistencia,
+    },
+    detalhes_alertas: {
+      saude: contarAlertas(parsed, 'saude'),
+      educacao: contarAlertas(parsed, 'educacao'),
+      assistencia_social: contarAlertas(parsed, 'assistencia_social'),
     }
   })
 }
