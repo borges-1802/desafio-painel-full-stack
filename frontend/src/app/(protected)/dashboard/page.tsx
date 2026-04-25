@@ -1,6 +1,7 @@
 import AlertasCard from '@/components/dashboard/AlertsCard'
 import BairroCard from '@/components/dashboard/BairrosCard'
 import SummaryCards from '@/components/dashboard/SummaryCards'
+import InsightsCard from '@/components/dashboard/InsightCard'
 
 export default function DashboardPage() {
     return (
@@ -20,9 +21,11 @@ export default function DashboardPage() {
                 </h2>
                 <AlertasCard />
             </div>
-            <div className="mt-6">
+            <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <BairroCard />
+                <InsightsCard />
             </div>
         </main>
+      
     )
 }

@@ -110,10 +110,16 @@ export interface Summary {
         assistencia_social: AlertaDetalhe[]
     }
     por_bairro: BairroDetalhe[]
+    insights: Insight[]
 }
 
 export interface BairroDetalhe {
     bairro: string
     total: number
     comAlertas: number
+}
+
+export interface Insight {
+    tipo: 'critico' | 'atencao' | 'info'
+    mensagem: string
 }
