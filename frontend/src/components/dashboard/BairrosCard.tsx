@@ -19,7 +19,7 @@ export default function BairroCard() {
     const chartData = (data?.por_bairro || []).map((b) => ({
         name: b.bairro.length > 12 ? b.bairro.slice(0, 12) + '…' : b.bairro,
         bairroOriginal: b.bairro,
-        'Com alertas': b.comAlertas,
+        'Crianças com alertas': b.comAlertas,
     }))
 
     function handleClick(data: any) {
@@ -41,8 +41,6 @@ export default function BairroCard() {
                 <BarChart
                     data={chartData}
                     margin={{ top: 4, right: 8, left: -20, bottom: 0 }}
-                    onClick={handleClick}
-                    style={{ cursor: 'pointer' }}
                     >
                     <XAxis
                         dataKey="name"
@@ -67,7 +65,17 @@ export default function BairroCard() {
                         cursor={{ fill: 'rgba(148,163,184,0.1)' }}
                     />
                     <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '12px' }} />
-                    <Bar dataKey="Com alertas" radius={[4, 4, 0, 0]} fill="#fdba74" />
+                    <Bar
+                        dataKey="Crianças com alertas"
+                        radius={[4, 4, 0, 0]}
+                        fill="#fdba74"
+                        onClick={(data: any) => {
+                            if (data?.bairroOriginal) {
+                            router.push(`/children?bairro=${encodeURIComponent(data.bairroOriginal)}`)
+                            }
+                        }}
+                        style={{ cursor: 'pointer' }}
+                    />
                 </BarChart>
             </ResponsiveContainer>
         </div>
