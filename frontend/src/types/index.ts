@@ -91,22 +91,29 @@ export interface ReviewResponse {
 }
 
 export interface AlertaDetalhe {
-  alerta: string
-  total: number
+    alerta: string
+    total: number
 }
 
 export interface Summary {
-  total: number
-  revisados: number
-  com_alertas: number
-  alertas_por_area: {
-    saude: number
-    educacao: number
-    assistencia_social: number
-  }
-  detalhes_alertas: {
-    saude: AlertaDetalhe[]
-    educacao: AlertaDetalhe[]
-    assistencia_social: AlertaDetalhe[]
-  }
+    total: number
+    revisados: number
+    com_alertas: number
+    alertas_por_area: {
+        saude: number
+        educacao: number
+        assistencia_social: number
+    }
+    detalhes_alertas: {
+        saude: AlertaDetalhe[]
+        educacao: AlertaDetalhe[]
+        assistencia_social: AlertaDetalhe[]
+    }
+    por_bairro: BairroDetalhe[]
+}
+
+export interface BairroDetalhe {
+    bairro: string
+    total: number
+    comAlertas: number
 }

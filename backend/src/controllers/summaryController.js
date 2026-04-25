@@ -20,6 +20,22 @@ function contarAlertas(children, area) {
   return Object.entries(contagem).map(([alerta, total]) => ({ alerta, total }))
 }
 
+function contarPorBairro(rows) {
+  const bairros = {}
+  for (const row of rows) {
+    const c = parseRow(row)
+    const bairro = row.bairro
+    if (!bairros[bairro]) bairros[bairro] = { total: 0, comAlertas: 0 }
+    bairros[bairro].total++
+    const temAlerta =
+      (Array.isArray(c.saude?.alertas) && c.saude.alertas.length > 0) ||
+      (Array.isArray(c.educacao?.alertas) && c.educacao.alertas.length > 0) ||
+      (Array.isArray(c.assistencia_social?.alertas) && c.assistencia_social.alertas.length > 0)
+    if (temAlerta) bairros[bairro].comAlertas++
+  }
+  return Object.entries(bairros).map(([bairro, dados]) => ({ bairro, ...dados }))
+}
+
 function getSummary(req, res) {
   const rows = db.prepare('SELECT * FROM children').all()
   const total = rows.length
@@ -60,7 +76,8 @@ function getSummary(req, res) {
       saude: contarAlertas(parsed, 'saude'),
       educacao: contarAlertas(parsed, 'educacao'),
       assistencia_social: contarAlertas(parsed, 'assistencia_social'),
-    }
+    },
+    por_bairro: contarPorBairro(rows)
   })
 }
 

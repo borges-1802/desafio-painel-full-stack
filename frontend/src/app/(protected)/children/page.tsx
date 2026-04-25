@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { ChildrenFilters } from '@/types'
 import ChildrenFiltersComponent from '@/components/children/ChildrenFilters'
 import ChildrenList from '@/components/children/ChildrenList'
@@ -9,7 +10,11 @@ import { useQuery } from '@tanstack/react-query'
 import { childrenApi } from '@/lib/api'
 
 export default function ChildrenPage() {
-  const [filters, setFilters] = useState<ChildrenFilters>({ page: 1, limit: 10 })
+  const searchParams = useSearchParams()
+
+  const [filters, setFilters] = useState<ChildrenFilters>({ page: 1, limit: 10,
+    bairro: searchParams.get('bairro') || undefined,
+  })
 
   const { data } = useQuery({
     queryKey: ['children', filters],

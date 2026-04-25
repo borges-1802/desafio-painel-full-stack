@@ -1,4 +1,5 @@
 import AlertasCard from '@/components/dashboard/AlertsCard'
+import BairroCard from '@/components/dashboard/BairrosCard'
 import SummaryCards from '@/components/dashboard/SummaryCards'
 
 export default function DashboardPage() {
@@ -18,6 +19,9 @@ export default function DashboardPage() {
                     Casos com Alertas
                 </h2>
                 <AlertasCard />
+            </div>
+            <div className="mt-6">
+                <BairroCard />
             </div>
         </main>
     )
