@@ -41,7 +41,7 @@ function NavContent({ collapsed, onNavigate }: { collapsed?: boolean, onNavigate
         <div className="w-8 h-8 rounded-lg bg-rio-blue flex items-center justify-center shrink-0">
           <span className="text-white text-xs font-bold">RIO</span>
         </div>
-          {!collapsed && <span className="font-semibold text-sm">Painel Prefeitura</span>}
+          {!collapsed && <span className="font-semibold text-sm">Painel</span>}
       </div>
 
       <nav className="flex flex-col gap-1 flex-1">

@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { ChildrenFilters } from '@/types'
 import ChildrenFiltersComponent from '@/components/children/ChildrenFilters'
 import ChildrenList from '@/components/children/ChildrenList'
+import { Pagination } from '@/components/children/Pagination'
 import { useQuery } from '@tanstack/react-query'
 import { childrenApi } from '@/lib/api'
 
 export default function ChildrenPage() {
-  const [filters, setFilters] = useState<ChildrenFilters>({ page: 1, limit: 25 })
+  const [filters, setFilters] = useState<ChildrenFilters>({ page: 1, limit: 10 })
 
   const { data } = useQuery({
     queryKey: ['children', filters],
@@ -34,6 +35,16 @@ export default function ChildrenPage() {
       </div>
 
       <ChildrenList filters={filters} />
+
+      {data && data.meta.totalPages > 1 && (
+        <div className="mt-6">
+          <Pagination
+            currentPage={data.meta.page}
+            totalPages={data.meta.totalPages}
+            onPageChange={(page) => setFilters((prev) => ({ ...prev, page }))}
+          />
+        </div>
+      )}
     </main>
   )
 }
