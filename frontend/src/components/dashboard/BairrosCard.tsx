@@ -22,14 +22,6 @@ export default function BairroCard() {
         'Crianças com alertas': b.comAlertas,
     }))
 
-    function handleClick(data: any) {
-        if (!data || data.activeIndex === undefined) return
-        const item = chartData[Number(data.activeIndex)]
-        if (item?.bairroOriginal) {
-            router.push(`/children?bairro=${encodeURIComponent(item.bairroOriginal)}`)
-        }
-    }
-
     return (
         <div className="rounded-xl border bg-card p-5 shadow-sm">
             <div className="mb-4">
