@@ -42,11 +42,6 @@ export default function DashboardPage() {
                     Casos com Alertas
                 </h2>
                 <AlertasCard />
-            </div>
-            <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <BairroCard />
-                <InsightsCard />
-            </div>
       {data && (
         <div className="mt-6">
           <MapaCalor
@@ -56,6 +51,11 @@ export default function DashboardPage() {
           />
         </div>
       )}
+            </div>
+            <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <BairroCard />
+                <InsightsCard />
+            </div>
         </main>
     )
 }
