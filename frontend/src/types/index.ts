@@ -84,6 +84,18 @@ export interface AlertaDetalhe {
     total: number
 }
 
+export interface BairroDetalhe {
+  bairro: string
+  total: number
+  comAlertas: number
+  porArea: {
+    saude: number
+    educacao: number
+    assistencia_social: number
+  }
+  alertas: Record<string, number>
+}
+
 export interface Summary {
     total: number
     revisados: number
@@ -99,14 +111,14 @@ export interface Summary {
         assistencia_social: AlertaDetalhe[]
     }
     por_bairro: BairroDetalhe[]
+    alertas_por_bairro?: {
+        [bairro: string]: {
+            [alerta: string]: number
+        }
+    }
     insights: Insight[]
 }
 
-export interface BairroDetalhe {
-    bairro: string
-    total: number
-    comAlertas: number
-}
 
 export interface Insight {
     tipo: 'critico' | 'atencao' | 'info'

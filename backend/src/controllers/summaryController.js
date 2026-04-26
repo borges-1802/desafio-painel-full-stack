@@ -48,7 +48,7 @@ function separarAlertasPorArea(parsed) {
   }
 }
 
-function gerarInsights(rows, parsed, contagemAlertas) {
+function gerarInsights(rows, parsed, contagemAlertas, bairros) {
   const insights = []
 
   let multiplos = 0
@@ -76,10 +76,7 @@ function gerarInsights(rows, parsed, contagemAlertas) {
     const faixa = idade <= 5 ? '0-5' : idade <= 12 ? '6-12' : '13-17'
 
     faixas[faixa]++
-
-    if (areas > 0) {
-      faixasAlerta[faixa]++
-    }
+    if (areas > 0) faixasAlerta[faixa]++
   }
 
   if (multiplos > 0) {
@@ -117,6 +114,24 @@ function gerarInsights(rows, parsed, contagemAlertas) {
     insights.push({
       tipo: 'info',
       mensagem: `Alerta mais frequente: "${maisComum[0].replace(/_/g, ' ')}" (${maisComum[1]} casos)`
+    })
+  }
+
+  const entries = Object.entries(bairros)
+
+  const topSaude = entries.sort((a, b) => b[1].porArea.saude - a[1].porArea.saude)[0]
+  if (topSaude && topSaude[1].porArea.saude > 0) {
+    insights.push({
+      tipo: 'critico',
+      mensagem: `Maior concentração de alertas de saúde em ${topSaude[0]}`
+    })
+  }
+
+  const topEducacao = entries.sort((a, b) => b[1].porArea.educacao - a[1].porArea.educacao)[0]
+  if (topEducacao && topEducacao[1].porArea.educacao > 0) {
+    insights.push({
+      tipo: 'atencao',
+      mensagem: `Educação é mais crítica em ${topEducacao[0]}`
     })
   }
 
@@ -168,14 +183,27 @@ function getSummary(req, res) {
     if (c.educacao?.alertas?.length) alertas_por_area.educacao++
     if (c.assistencia_social?.alertas?.length) alertas_por_area.assistencia_social++
     if (!bairros[row.bairro]) {
-      bairros[row.bairro] = { total: 0, comAlertas: 0 }
+      bairros[row.bairro] = {
+        total: 0,
+        comAlertas: 0,
+        porArea: {
+          saude: 0,
+          educacao: 0,
+          assistencia_social: 0
+        },
+        alertas: {}
+      }
     }
 
     bairros[row.bairro].total++
     if (temAlerta) bairros[row.bairro].comAlertas++
+    if (c.saude?.alertas?.length) bairros[row.bairro].porArea.saude++
+    if (c.educacao?.alertas?.length) bairros[row.bairro].porArea.educacao++
+    if (c.assistencia_social?.alertas?.length) bairros[row.bairro].porArea.assistencia_social++
 
     for (const a of alertas) {
       contagemAlertas[a] = (contagemAlertas[a] || 0) + 1
+      bairros[row.bairro].alertas[a] = (bairros[row.bairro].alertas[a] || 0) + 1
     }
   }
 
@@ -185,8 +213,10 @@ function getSummary(req, res) {
     com_alertas,
     alertas_por_area,
     detalhes_alertas: separarAlertasPorArea(parsed),
-    por_bairro: Object.entries(bairros).map(([bairro, d]) => ({ bairro, ...d })).sort((a, b) => b.comAlertas - a.comAlertas),
-    insights: gerarInsights(rows, parsed, contagemAlertas)
+    por_bairro: Object.entries(bairros)
+      .map(([bairro, d]) => ({ bairro, ...d }))
+      .sort((a, b) => b.comAlertas - a.comAlertas),
+    insights: gerarInsights(rows, parsed, contagemAlertas, bairros)
   })
 }
 
