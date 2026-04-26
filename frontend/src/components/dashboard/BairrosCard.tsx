@@ -13,7 +13,7 @@ export default function BairroCard() {
     })
 
     if (isLoading) {
-        return <div className="h-64 rounded-xl bg-gray-100 animate-pulse" />
+        return <div className="h-64 rounded-xl bg-muted animate-pulse" />
     }
 
     const chartData = (data?.por_bairro || []).map((b) => ({

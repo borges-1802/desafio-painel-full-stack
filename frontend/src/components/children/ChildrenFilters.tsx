@@ -18,7 +18,7 @@ const TIPOS_ALERTA = [
 ]
 
 const selectContentProps = {
-  className: "w-[--radix-select-trigger-width] [&_[role=option]:hover]:bg-blue-300 [&_[role=option]:hover]:text-white",
+  className: "w-[--radix-select-trigger-width] [&_[role=option][data-highlighted]]:bg-rio-blue/50",
   position: "popper" as const,
   sideOffset: 0,
   avoidCollisions: false,
@@ -230,7 +230,7 @@ export default function ChildrenFiltersComponent({ filters, onChange }: Props) {
           {tags.map((tag) => (
             <span
               key={tag.key}
-              className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-rio-blue/10 text-rio-blue text-xs"
+              className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-rio-blue text-white text-xs"
             >
               {tag.label}
               <button

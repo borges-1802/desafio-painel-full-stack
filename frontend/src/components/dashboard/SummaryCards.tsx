@@ -15,7 +15,7 @@ export default function SummaryCards() {
         return (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 rounded-xl bg-gray-100 animate-pulse" />
+            <div key={i} className="h-28 rounded-xl bg-muted animate-pulse" />
             ))}
         </div>
         )
@@ -46,27 +46,27 @@ const cards = [
     value: data.com_alertas,
     icon: AlertTriangle,
     href: '/children?alertas=true',
-    titleColor: 'text-gray-800/70',
-    valueColor: 'text-orange-700',
-    iconColor: 'text-orange-700/70',
+    titleColor: 'text-muted-foreground',
+    valueColor: 'text-orange-600 dark:text-orange-400',
+    iconColor: 'text-orange-600/70 dark:text-orange-400/70',
   },
   {
     title: 'Casos Revisados',
     value: data.revisados,
     icon: CheckCircle,
     href: '/children?revisado=true',
-    titleColor: 'text-gray-800/70',
-    valueColor: 'text-teal-700',
-    iconColor: 'text-teal-700/70',
+    titleColor: 'text-muted-foreground',
+    valueColor: 'text-teal-600 dark:text-teal-400',
+    iconColor: 'text-teal-600/70 dark:text-teal-400/70',
   },
   {
     title: 'Casos Pendentes',
     value: data.total - data.revisados,
     icon: ClockFading,
     href: '/children?revisado=false',
-    titleColor: 'text-gray-800/70',
-    valueColor: 'text-purple-900',
-    iconColor: 'text-purple-700/70',
+    titleColor: 'text-muted-foreground',
+    valueColor: 'text-purple-700 dark:text-purple-400',
+    iconColor: 'text-purple-700/70 dark:text-purple-400/70',
   }
 ]
 

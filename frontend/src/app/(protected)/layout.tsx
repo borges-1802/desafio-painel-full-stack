@@ -2,7 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
-import Sidebar from '@/components/Sidebar'
+import Sidebar from '@/components/shared/Sidebar'
 
 export default function ProtectedLayout({ children, } : { children: React.ReactNode}) {
     const [queryClient] = useState(() => new QueryClient())

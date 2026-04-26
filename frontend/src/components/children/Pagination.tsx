@@ -59,7 +59,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Props) {
               onClick={() => handlePageChange(page)}
               className={`w-9 h-9 rounded-md border text-sm font-medium transition-all ${
                 page === currentPage
-                  ? 'bg-rio-blue text-primary-foreground scale-105 shadow-sm'
+                  ? 'bg-rio-blue text-white scale-105 shadow-sm'
                   : 'hover:bg-accent hover:scale-105'
               }`}
               aria-label={`Ir para página ${page}`}

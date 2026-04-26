@@ -58,7 +58,7 @@ export default function ChildrenPage() {
       <div className="mb-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+            <h1 className="text-2xl font-bold text-foreground">
               Crianças Acompanhadas
             </h1>
             <p className="text-muted-foreground text-sm mt-1">

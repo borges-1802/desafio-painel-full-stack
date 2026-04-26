@@ -7,6 +7,7 @@ import { LayoutDashboard, Users, LogOut, User, Menu, ChevronLeft, ChevronRight }
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { removeToken, useToken } from '@/lib/auth'
 import { cn } from '@/lib/utils'
+import { ThemeToggle } from './ThemeToggle'
 
 const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -70,6 +71,8 @@ function NavContent({ collapsed, onNavigate }: { collapsed?: boolean, onNavigate
 
       <div className="flex flex-col gap-1 mt-auto">
         <div className="border-t mb-3" />
+
+        <ThemeToggle collapsed={collapsed} />
 
         <div className={cn(
           'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground',
