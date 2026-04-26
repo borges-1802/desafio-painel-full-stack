@@ -129,7 +129,7 @@ export default function ChildrenCards({ filters, onMetaChange }: Props) {
 
   useEffect(() => {
     if (data?.meta) onMetaChange?.(data.meta)
-  }, [data?.meta])
+  }, [data?.meta, onMetaChange])
 
   if (isLoading) {
     return (
