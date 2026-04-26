@@ -3,15 +3,23 @@
 import { useQuery } from '@tanstack/react-query'
 import { summaryApi } from '@/lib/api'
 import { HeartPulse, BookOpen, HandHeart } from 'lucide-react'
+import Link from 'next/link'
+
 
 const ALERTA_LABELS: Record<string, string> = {
-  vacinas_atrasadas: 'Vacinas atrasadas',
-  consulta_atrasada: 'Consulta atrasada',
-  frequencia_baixa: 'Frequência baixa',
-  matricula_pendente: 'Matrícula pendente',
-  beneficio_suspenso: 'Benefício suspenso',
-  cadastro_ausente: 'Cadastro ausente',
-  cadastro_desatualizado: 'Cadastro desatualizado',
+    vacinas_atrasadas: 'Vacinas atrasadas',
+    consulta_atrasada: 'Consulta atrasada',
+    frequencia_baixa: 'Frequência baixa',
+    matricula_pendente: 'Matrícula pendente',
+    beneficio_suspenso: 'Benefício suspenso',
+    cadastro_ausente: 'Cadastro ausente',
+    cadastro_desatualizado: 'Cadastro desatualizado',
+}
+
+const AREA_ROUTE: Record<string, string> = {
+    saude: '/children?area=saude&alertas=true',
+    educacao: '/children?area=educacao&alertas=true',
+    assistencia_social: '/children?area=assistencia&alertas=true',
 }
 
 const AREAS = [
@@ -64,15 +72,18 @@ export default function AlertasCard() {
         const total = alertas.reduce((acc, a) => acc + a.total, 0)
 
         return (
-          <div key={area.key} className="rounded-xl border bg-card p-5 shadow-sm">
+          <Link key={area.key} href={AREA_ROUTE[area.key]} className="group rounded-xl border bg-card p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
             <div className="flex items-center gap-3 mb-4">
               <div className={`w-9 h-9 rounded-lg ${area.iconBg} flex items-center justify-center`}>
                 <area.icon className={`w-4 h-4 ${area.iconColor}`} />
               </div>
-              <div>
+              <div className="flex-1">
                 <h2 className="font-semibold text-sm">{area.label}</h2>
                 <p className="text-xs text-muted-foreground">{total} alerta{total !== 1 ? 's' : ''}</p>
               </div>
+              <span className="text-xs text-muted-foreground opacity-60 group-hover:opacity-100 transition">
+                Ver →
+              </span>
             </div>
 
             {alertas.length === 0 ? (
@@ -97,7 +108,7 @@ export default function AlertasCard() {
                 ))}
               </div>
             )}
-          </div>
+          </Link>
         )
       })}
     </div>

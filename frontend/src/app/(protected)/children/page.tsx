@@ -20,15 +20,26 @@ export default function ChildrenPage() {
   })
 
   useEffect(() => {
-    const saved = localStorage.getItem('children-view') as 'list' | 'cards' | null
-    if (saved) setView(saved)
-  }, [])
+  const saved = localStorage.getItem('children-view') as 'list' | 'cards' | null
+  if (saved) {
+    setView(saved)
+  } else {
+    setView(window.innerWidth < 768 ? 'cards' : 'list')
+  }
+}, [])
 
   useEffect(() => {
     setFilters(prev => ({
       ...prev,
       page: 1,
       bairro: searchParams.get('bairro') || undefined,
+      alertas: searchParams.get('alertas') !== null
+        ? searchParams.get('alertas') === 'true'
+        : undefined,
+      revisado: searchParams.get('revisado') !== null
+        ? searchParams.get('revisado') === 'true'
+        : undefined,
+      area: searchParams.get('area') || undefined,
     }))
   }, [searchParams])
 
@@ -60,10 +71,16 @@ export default function ChildrenPage() {
         />
       </div>
 
-      {view === 'list'
-        ? <ChildrenList filters={{ ...filters, limit: 10 }} onMetaChange={setMeta} />
-        : <ChildrenCards filters={{ ...filters, limit: 9 }} onMetaChange={setMeta} onChange={setFilters} />
-      }
+      {view === null ? (
+  <div className="space-y-3">
+    {[...Array(3)].map((_, i) => (
+      <div key={i} className="h-14 rounded bg-gray-100 animate-pulse" />
+    ))}
+  </div>
+) : view === 'list'
+  ? <ChildrenList filters={{ ...filters, limit: 10 }} onMetaChange={setMeta} />
+  : <ChildrenCards filters={{ ...filters, limit: 9 }} onMetaChange={setMeta} onChange={setFilters} />
+}
 
       {meta && meta.totalPages > 1 && (
         <div className="mt-6">

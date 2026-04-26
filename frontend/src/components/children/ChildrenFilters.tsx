@@ -115,10 +115,15 @@ export default function ChildrenFiltersComponent({ filters, onChange }: Props) {
               })
             }}>
             <SelectTrigger className="w-full"><SelectValue placeholder="Padrão" /></SelectTrigger>
-            <SelectContent>
+            <SelectContent 
+  className="w-[--radix-select-trigger-width] [&_[role=option]:hover]:bg-blue-300 [&_[role=option]:hover]:text-white" 
+  position="popper" 
+  sideOffset={0} 
+  avoidCollisions={false}
+>
               <SelectItem value="none-none">Padrão</SelectItem>
-              <SelectItem value="nome-asc">Nome A → Z</SelectItem>
-              <SelectItem value="nome-desc">Nome Z → A</SelectItem>
+              <SelectItem value="nome-asc">Nome: A → Z</SelectItem>
+              <SelectItem value="nome-desc">Nome: Z → A</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -132,7 +137,12 @@ export default function ChildrenFiltersComponent({ filters, onChange }: Props) {
             onValueChange={(v) => onChange({ ...filters, bairro: v === 'todos' ? undefined : v, page: 1 })}
           >
             <SelectTrigger className="w-full"><SelectValue placeholder="Todos" /></SelectTrigger>
-            <SelectContent>
+            <SelectContent 
+  className="w-[--radix-select-trigger-width] [&_[role=option]:hover]:bg-blue-300 [&_[role=option]:hover]:text-white" 
+  position="popper" 
+  sideOffset={0} 
+  avoidCollisions={false}
+>
               <SelectItem value="todos">Todos</SelectItem>
               {BAIRROS.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
             </SelectContent>
@@ -146,7 +156,12 @@ export default function ChildrenFiltersComponent({ filters, onChange }: Props) {
             onValueChange={(v) => onChange({ ...filters, faixaEtaria: v === 'todos' ? undefined : v, page: 1 })}
           >
             <SelectTrigger className="w-full"><SelectValue placeholder="Todas" /></SelectTrigger>
-            <SelectContent>
+            <SelectContent 
+  className="w-[--radix-select-trigger-width] [&_[role=option]:hover]:bg-blue-300 [&_[role=option]:hover]:text-white" 
+  position="popper" 
+  sideOffset={0} 
+  avoidCollisions={false}
+>
               <SelectItem value="todos">Todas</SelectItem>
               <SelectItem value="0-5">0–5 anos</SelectItem>
               <SelectItem value="6-12">6–12 anos</SelectItem>
@@ -162,7 +177,12 @@ export default function ChildrenFiltersComponent({ filters, onChange }: Props) {
             onValueChange={(v) => onChange({ ...filters, alertas: v === 'todos' ? undefined : v === 'true', page: 1 })}
           >
             <SelectTrigger className="w-full"><SelectValue placeholder="Todos" /></SelectTrigger>
-            <SelectContent>
+            <SelectContent 
+  className="w-[--radix-select-trigger-width] [&_[role=option]:hover]:bg-blue-300 [&_[role=option]:hover]:text-white" 
+  position="popper" 
+  sideOffset={0} 
+  avoidCollisions={false}
+>
               <SelectItem value="todos">Todos</SelectItem>
               <SelectItem value="true">Com alertas</SelectItem>
               <SelectItem value="false">Sem alertas</SelectItem>
@@ -177,7 +197,12 @@ export default function ChildrenFiltersComponent({ filters, onChange }: Props) {
             onValueChange={(v) => onChange({ ...filters, area: v === 'todos' ? undefined : v, page: 1 })}
           >
             <SelectTrigger className="w-full"><SelectValue placeholder="Todas" /></SelectTrigger>
-            <SelectContent>
+            <SelectContent 
+  className="w-[--radix-select-trigger-width] [&_[role=option]:hover]:bg-blue-300 [&_[role=option]:hover]:text-white" 
+  position="popper" 
+  sideOffset={0} 
+  avoidCollisions={false}
+>
               <SelectItem value="todos">Todas</SelectItem>
               <SelectItem value="saude">Saúde</SelectItem>
               <SelectItem value="educacao">Educação</SelectItem>
@@ -193,7 +218,12 @@ export default function ChildrenFiltersComponent({ filters, onChange }: Props) {
             onValueChange={(v) => onChange({ ...filters, tipoAlerta: v === 'todos' ? undefined : v, page: 1 })}
           >
             <SelectTrigger className="w-full"><SelectValue placeholder="Todos" /></SelectTrigger>
-            <SelectContent>
+            <SelectContent 
+  className="w-[--radix-select-trigger-width] [&_[role=option]:hover]:bg-blue-300 [&_[role=option]:hover]:text-white" 
+  position="popper" 
+  sideOffset={0} 
+  avoidCollisions={false}
+>
               <SelectItem value="todos">Todos</SelectItem>
               {TIPOS_ALERTA.map(t => (
                 <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
@@ -209,7 +239,12 @@ export default function ChildrenFiltersComponent({ filters, onChange }: Props) {
             onValueChange={(v) => onChange({ ...filters, revisado: v === 'todos' ? undefined : v === 'true', page: 1 })}
           >
             <SelectTrigger className="w-full"><SelectValue placeholder="Todos" /></SelectTrigger>
-            <SelectContent>
+            <SelectContent 
+  className="w-[--radix-select-trigger-width] [&_[role=option]:hover]:bg-blue-300 [&_[role=option]:hover]:text-white" 
+  position="popper" 
+  sideOffset={0} 
+  avoidCollisions={false}
+>
               <SelectItem value="todos">Todos</SelectItem>
               <SelectItem value="false">Pendentes</SelectItem>
               <SelectItem value="true">Revisados</SelectItem>

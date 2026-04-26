@@ -88,10 +88,11 @@ export default function MapaCalorCliente({ summary, selectedBairro, onSelectBair
     if (!window.L) return
 
     const L = window.L
+    const isMobile = window.innerWidth < 768
 
     const map = L.map(mapRef.current, {
-      center: [-22.9, -43.45],
-      zoom: 11,
+      center: isMobile ? [-22.88, -43.25] : [-22.9, -43.45],
+      zoom: isMobile ? 12 : 11,
       scrollWheelZoom: false,
     })
 
