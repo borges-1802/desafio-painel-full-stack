@@ -29,18 +29,6 @@ const CONFIG = {
     },
 }
 
-function InsightItem({ insight }: { insight: Insight }) {
-    const config = CONFIG[insight.tipo]
-    const Icon = config.icon
-
-    return (
-        <div className={`flex items-start gap-3 px-4 py-3 rounded-lg border ${config.bg} ${config.border}`}>
-            <Icon className={`w-4 h-4 shrink-0 mt-0.5 ${config.iconColor}`} />
-            <p className={`text-sm ${config.textColor}`}>{insight.mensagem}</p>
-        </div>
-    )
-}
-
 export default function InsightsCard() {
     const { data, isLoading } = useQuery({
         queryKey: ['summary'],
@@ -64,7 +52,7 @@ export default function InsightsCard() {
     return (
         <div className={`flex items-start gap-3 px-4 py-3 rounded-lg border ${config.bg} ${config.border}`}>
             <Icon className={`w-4 h-4 shrink-0 mt-0.5 ${config.iconColor}`} />
-            <p className={`text-xs sm:text-sm ${config.textColor}`}>{insight.mensagem}</p>
+            <p className={`text-sm ${config.textColor}`}>{insight.mensagem}</p>
         </div>
     )
 }

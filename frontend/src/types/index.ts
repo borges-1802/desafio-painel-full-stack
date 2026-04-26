@@ -42,17 +42,6 @@ export interface ChildrenResponse {
     }
 }
 
-export interface Summary {
-    total: number
-    revisados: number
-    com_alertas: number
-    alertas_por_area: {
-        saude: number
-        educacao: number
-        assistencia_social: number
-    }
-}
-
 export interface ChildrenFilters {
     bairro?: string
     alertas?: boolean
