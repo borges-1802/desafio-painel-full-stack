@@ -25,8 +25,8 @@ export default function RootLayout({
       <Script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" strategy="afterInteractive"/>
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" precedence="default"/>
       <body className="min-h-full flex flex-col">
-        <Toaster richColors position="top-right" />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Toaster richColors position="top-right" />
           {children}
         </ThemeProvider>
       </body>
