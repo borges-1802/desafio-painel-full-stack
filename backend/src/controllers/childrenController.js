@@ -25,7 +25,7 @@ function parseBoolean(value) {
 }
 
 function listChildren(req, res) {
-  const { bairro, alertas, revisado, page = 1, limit = 25 } = req.query
+  const { bairro, alertas, revisado, nome, area, page = 1, limit = 25 } = req.query
 
   const pageNum = Number(page)
   const limitNum = Number(limit)
@@ -42,6 +42,13 @@ function listChildren(req, res) {
 
   let children = db.prepare('SELECT * FROM children').all().map(parseChild)
 
+  if (nome) {
+    const nomeNorm = nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    children = children.filter(c =>
+      c.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(nomeNorm)
+    )
+  }
+
   if (bairro) {
     children = children.filter(c => c.bairro === bairro)
   }
@@ -52,6 +59,20 @@ function listChildren(req, res) {
 
   if (alertasBool === false) {
     children = children.filter(c => !hasAlert(c))
+  }
+
+  if (area && area !== 'todos') {
+    const areaMap = {
+      saude: 'saude',
+      educacao: 'educacao',
+      assistencia: 'assistencia_social',
+    }
+    const areaKey = areaMap[area]
+    if (areaKey) {
+      children = children.filter(c =>
+        Array.isArray(c[areaKey]?.alertas) && c[areaKey].alertas.length > 0
+      )
+    }
   }
 
   if (revisadoBool !== undefined) {

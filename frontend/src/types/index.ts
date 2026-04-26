@@ -48,6 +48,8 @@ export interface ChildrenFilters {
     revisado?: boolean
     page?: number
     limit?: number
+    nome?: string
+    area?: string
 }
 
 export type ChildListItem = {
