@@ -24,8 +24,17 @@ function parseBoolean(value) {
   return undefined
 }
 
+function calcularIdade(dataNascimento) {
+  const hoje = new Date()
+  const nascimento = new Date(dataNascimento)
+  let idade = hoje.getFullYear() - nascimento.getFullYear()
+  const m = hoje.getMonth() - nascimento.getMonth()
+  if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--
+  return idade
+}
+
 function listChildren(req, res) {
-  const { bairro, alertas, revisado, nome, area, page = 1, limit = 25 } = req.query
+  const { bairro, alertas, revisado, nome, area, faixaEtaria, tipoAlerta, page = 1, limit = 25 } = req.query
 
   const pageNum = Number(page)
   const limitNum = Number(limit)
@@ -73,6 +82,27 @@ function listChildren(req, res) {
         Array.isArray(c[areaKey]?.alertas) && c[areaKey].alertas.length > 0
       )
     }
+  }
+  
+  if (faixaEtaria && faixaEtaria !== 'todos') {
+  children = children.filter(c => {
+    const idade = calcularIdade(c.data_nascimento)
+    if (faixaEtaria === '0-5') return idade <= 5
+    if (faixaEtaria === '6-12') return idade >= 6 && idade <= 12
+    if (faixaEtaria === '13-17') return idade >= 13
+    return true
+  })
+  }
+
+  if (tipoAlerta && tipoAlerta !== 'todos') {
+    children = children.filter(c => {
+      const alertas = [
+        ...(c.saude?.alertas || []),
+        ...(c.educacao?.alertas || []),
+        ...(c.assistencia_social?.alertas || []),
+      ]
+      return alertas.includes(tipoAlerta)
+    })
   }
 
   if (revisadoBool !== undefined) {

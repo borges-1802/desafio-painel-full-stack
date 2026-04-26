@@ -50,6 +50,8 @@ export interface ChildrenFilters {
     limit?: number
     nome?: string
     area?: string
+    faixaEtaria?: string
+    tipoAlerta?: string
 }
 
 export type ChildListItem = {

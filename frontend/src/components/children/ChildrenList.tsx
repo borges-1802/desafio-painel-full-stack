@@ -6,9 +6,11 @@ import { ChildrenFilters } from '@/types'
 import { toChildListItem } from '@/lib/transform'
 import { CheckCircle, Clock, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
+import { useEffect } from 'react'
 
 interface Props {
   filters: ChildrenFilters
+  onMetaChange?: (meta: { total: number; page: number; totalPages: number }) => void
 }
 
 const AREA_LABELS = {
@@ -17,11 +19,15 @@ const AREA_LABELS = {
   sem_dados: { label: 'Sem dados', class: 'bg-gray-100 text-gray-500' },
 }
 
-export default function ChildrenList({ filters }: Props) {
+export default function ChildrenList({ filters, onMetaChange }: Props) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['children', filters],
     queryFn: () => childrenApi.list(filters),
   })
+
+  useEffect(() => {
+    if (data?.meta) onMetaChange?.(data.meta)
+  }, [data?.meta])
 
   if (isLoading) {
     return (
