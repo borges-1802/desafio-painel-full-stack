@@ -3,9 +3,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { childrenApi } from '@/lib/api'
 import { useParams, useRouter } from 'next/navigation'
-import { ArrowLeft, CheckCircle, Clock, AlertTriangle, Loader2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { ArrowLeft, Calendar, Loader2, MapPin, User } from 'lucide-react'
 import { toast } from 'sonner'
+import { calcularIdade } from '@/lib/utils'
+import { SocialSection } from '@/components/childrenId/SocialSection'
+import { EducationSection } from '@/components/childrenId/EducationSection'
+import { HealthSection } from '@/components/childrenId/HealthSection'
+import { ReviewCard } from '@/components/childrenId/ReviewSection'
+import { ReviewActionCard } from '@/components/childrenId/ReviewActionCard'
 
 const ALERT_LABELS: Record<string, string> = {
   vacinas_atrasadas: 'Vacinas atrasadas',
@@ -15,15 +20,6 @@ const ALERT_LABELS: Record<string, string> = {
   beneficio_suspenso: 'Benefício suspenso',
   cadastro_ausente: 'Cadastro ausente',
   cadastro_desatualizado: 'Cadastro desatualizado',
-}
-
-function calcularIdade(dataNascimento: string) {
-  const hoje = new Date()
-  const nascimento = new Date(dataNascimento)
-  let idade = hoje.getFullYear() - nascimento.getFullYear()
-  const m = hoje.getMonth() - nascimento.getMonth()
-  if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--
-  return idade
 }
 
 export default function ChildDetailPage() {
@@ -66,117 +62,70 @@ export default function ChildDetailPage() {
   }
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-8">
+    <main className="max-w-4xl mx-auto px-4 py-8 space-y-6">
 
-      <div className="flex items-center gap-3 mb-6">
-        <Button variant="ghost" size="icon" onClick={() => router.back()}>
-          <ArrowLeft className="w-4 h-4" />
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold">{child.nome}</h1>
-          <p className="text-muted-foreground text-sm">
-            {calcularIdade(child.data_nascimento)} anos - {child.bairro} - Resp: {child.responsavel}
-          </p>
-        </div>
-      </div>
+      <button onClick={() => router.back()}
+        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group">
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        Voltar
+      </button>
 
-      <div className={`rounded-xl border p-4 mb-6 flex items-center justify-between ${child.revisado ? 'bg-teal-50 border-teal-200' : 'bg-orange-50 border-orange-200'}`}>
-        <div className="flex items-center gap-2">
-          {child.revisado
-            ? <CheckCircle className="w-5 h-5 text-teal-600" />
-            : <Clock className="w-5 h-5 text-orange-600" />
-          }
-          <div>
-            <p className={`text-sm font-semibold ${child.revisado ? 'text-teal-800' : 'text-orange-800'}`}>
-              {child.revisado ? 'Caso revisado' : 'Pendente de revisão'}
-            </p>
-            {child.revisado && child.revisado_por && (
-              <p className="text-xs text-teal-600">
-                Por {child.revisado_por} em {new Date(child.revisado_em!).toLocaleDateString('pt-BR')}
-              </p>
-            )}
+      <div className="bg-card border border-border rounded-xl p-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+          <div className="flex items-start gap-4">
+            <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center font-bold text-lg text-primary">
+              {child.nome.charAt(0)}
+            </div>
+            <div>
+              <h1 className="text-xl font-bold">{child.nome}</h1>
+
+              <div className="flex flex-wrap gap-3 mt-2 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5" />
+                  {calcularIdade(child.data_nascimento)} anos
+                </span>
+
+                <span className="flex items-center gap-1">
+                  <MapPin className="w-3.5 h-3.5" />
+                  {child.bairro}
+                </span>
+              </div>
+
+              <div className="flex flex-wrap gap-3 mt-1 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <User className="w-3.5 h-3.5" />
+                  Responsável: {child.responsavel}
+                </span>
+
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-start sm:items-end gap-2">
+            {(() => {
+              const totalAlertas =
+                (child.saude?.alertas?.length ?? 0) + (child.educacao?.alertas?.length ?? 0) + (child.assistencia_social?.alertas?.length ?? 0)
+              if (totalAlertas === 0) return null
+
+              return (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-destructive/10 text-destructive border border-destructive/20">
+                  ⚠ {totalAlertas} alerta{totalAlertas !== 1 ? 's' : ''}
+                </span>
+              )
+            })()}
           </div>
         </div>
-        {!child.revisado && (
-          <Button
-            onClick={() => review()}
-            disabled={isPending}
-            className="bg-rio-blue hover:bg-rio-blue-mid"
-          >
-            {isPending ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Salvando...</> : 'Marcar como revisado'}
-          </Button>
-        )}
       </div>
 
-      <div className="space-y-4">
-
-        <div className="rounded-xl border bg-card p-5">
-          <h2 className="font-semibold mb-3">Saúde</h2>
-          {child.saude ? (
-            <div className="space-y-2 text-sm">
-              <p><span className="text-muted-foreground">Última consulta:</span> {new Date(child.saude.ultima_consulta!).toLocaleDateString('pt-BR')}</p>
-              <p><span className="text-muted-foreground">Vacinas em dia:</span> {child.saude.vacinas_em_dia ? 'Sim' : 'Não'}</p>
-              {child.saude.alertas && child.saude.alertas.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {child.saude.alertas.map(a => (
-                    <span key={a} className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 border border-orange-200">
-                      <AlertTriangle className="w-3 h-3" />
-                      {ALERT_LABELS[a] || a}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">Sem dados de saúde cadastrados.</p>
-          )}
-        </div>
-
-        <div className="rounded-xl border bg-card p-5">
-          <h2 className="font-semibold mb-3">Educação</h2>
-          {child.educacao ? (
-            <div className="space-y-2 text-sm">
-              <p><span className="text-muted-foreground">Escola:</span> {child.educacao.escola || 'Não informada'}</p>
-              <p><span className="text-muted-foreground">Frequência:</span> {child.educacao.frequencia_percent !== null ? `${child.educacao.frequencia_percent}%` : 'Não informada'}</p>
-              {child.educacao.alertas && child.educacao.alertas.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {child.educacao.alertas.map(a => (
-                    <span key={a} className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 border border-orange-200">
-                      <AlertTriangle className="w-3 h-3" />
-                      {ALERT_LABELS[a] || a}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">Sem dados de educação cadastrados.</p>
-          )}
-        </div>
-
-        <div className="rounded-xl border bg-card p-5">
-          <h2 className="font-semibold mb-3">Assistência Social</h2>
-          {child.assistencia_social ? (
-            <div className="space-y-2 text-sm">
-              <p><span className="text-muted-foreground">CAD Único:</span> {child.assistencia_social.cad_unico ? 'Sim' : 'Não'}</p>
-              <p><span className="text-muted-foreground">Benefício ativo:</span> {child.assistencia_social.beneficio_ativo ? 'Sim' : 'Não'}</p>
-              {child.assistencia_social.alertas && child.assistencia_social.alertas.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {child.assistencia_social.alertas.map(a => (
-                    <span key={a} className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 border border-orange-200">
-                      <AlertTriangle className="w-3 h-3" />
-                      {ALERT_LABELS[a] || a}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">Sem dados de assistência social cadastrados.</p>
-          )}
-        </div>
-
+      <ReviewCard revisado={child.revisado} revisadoPor={child.revisado_por} revisadoEm={child.revisado_em}/>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <HealthSection saude={child.saude} alertLabels={ALERT_LABELS} />
+        <EducationSection educacao={child.educacao} alertLabels={ALERT_LABELS} />
+        <SocialSection assistenciaSocial={child.assistencia_social} alertLabels={ALERT_LABELS} />
       </div>
+
+      {!child.revisado && (<ReviewActionCard onReview={review} isLoading={isPending}/>)}
+
     </main>
   )
 }
