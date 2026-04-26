@@ -1,11 +1,4 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-
-export function calcularIdade(dataNascimento: string): number {
+export function calcularIdade(dataNascimento) {
   const hoje = new Date()
   const nascimento = new Date(dataNascimento)
   let idade = hoje.getFullYear() - nascimento.getFullYear()

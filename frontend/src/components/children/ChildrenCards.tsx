@@ -7,29 +7,13 @@ import { childrenApi } from '@/lib/api'
 import { toChildListItem } from '@/lib/transform'
 import { MapPin, HeartPulse, BookOpen, HandHeart, CheckCircle2, AlertTriangle, CircleSlash, Clock } from 'lucide-react'
 import Link from 'next/link'
+import { calcularIdade } from '@/lib/utils'
 
 interface Props {
   filters: ChildrenFilters
   onMetaChange?: (meta: { total: number; page: number; totalPages: number }) => void
   onChange?: (filters: ChildrenFilters) => void
 }
-
-function calcularIdade(dataNascimento: string) {
-  const hoje = new Date()
-  const nascimento = new Date(dataNascimento)
-  let idade = hoje.getFullYear() - nascimento.getFullYear()
-  const m = hoje.getMonth() - nascimento.getMonth()
-  if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--
-  return idade
-}
-
-function formatarData(data: string) {
-  return new Date(data).toLocaleDateString('pt-BR', {
-    day: '2-digit', month: '2-digit', year: 'numeric'
-  })
-}
-
-
 
 const areaConfig = {
   saude: { label: 'Saúde', Icon: HeartPulse },
@@ -41,24 +25,6 @@ const areaBadgeConfig = {
   ok: { cls: 'bg-green-500/10 text-green-600 border-green-500/20', dot: 'bg-green-500' },
   alerta: { cls: 'bg-amber-500/10 text-amber-600 border-amber-500/20', dot: 'bg-amber-500' },
   sem_dados: { cls: 'bg-gray-500/10 text-gray-400 border-gray-500/20 opacity-60', dot: 'bg-gray-400' },
-}
-
-function AreaBadge({ status, label, Icon }: { status: string; label: string; Icon: React.ElementType }) {
-  const config = areaBadgeConfig[status as keyof typeof areaBadgeConfig] ?? areaBadgeConfig.sem_dados
-
-  return (
-    <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs border ${config.cls}`}
-      title={`${label}: ${status === 'ok' ? 'sem alertas' : status === 'alerta' ? 'com alertas' : 'sem dados'}`}
-    >
-      {status === 'sem_dados'
-        ? <CircleSlash className="w-3 h-3" />
-        : <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
-      }
-      <Icon className="w-3 h-3" />
-      <span className="hidden sm:inline">{label}</span>
-    </span>
-  )
 }
 
 function ChildCard({ child }: { child: ChildListItem }) {
@@ -76,14 +42,12 @@ function ChildCard({ child }: { child: ChildListItem }) {
     : 'border-green-200 hover:border-green-400'
 
   return (
-    
     <Link
       href={`/children/${child.id}`}
       className={`group block bg-card border rounded-xl p-4 transition-all duration-200 
       hover:shadow-lg hover:-translate-y-0.5 ${statusVariant}
       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
     >
-      {/* HEADER */}
       <div className="flex items-center justify-between mb-2">
         <div className="min-w-0">
           <p className="font-semibold text-sm truncate group-hover:text-rio-blue transition-colors">
@@ -109,13 +73,11 @@ function ChildCard({ child }: { child: ChildListItem }) {
         </span>
       </div>
 
-      {/* BAIRRO */}
       <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground mb-3">
         <MapPin className="w-3 h-3" />
         {child.bairro}
       </div>
 
-      {/* ÁREAS */}
       <div className="grid grid-cols-3 gap-2 mb-3">
         {(Object.entries(areaConfig) as [
           keyof typeof areaConfig,
@@ -138,7 +100,6 @@ function ChildCard({ child }: { child: ChildListItem }) {
         })}
       </div>
 
-      {/* RODAPÉ */}
       <div className="flex items-center justify-between pt-2 border-t border-border text-xs">
         {child.revisado && child.revisado_em ? (
           <span className="text-green-600 flex items-center gap-1">

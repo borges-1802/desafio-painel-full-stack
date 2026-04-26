@@ -1,26 +1,18 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { childrenApi } from '@/lib/api'
 import { ChildrenFilters } from '@/types'
 import { toChildListItem } from '@/lib/transform'
 import { CheckCircle, Clock, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { calcularIdade } from '@/lib/utils'
 
 interface Props {
   filters: ChildrenFilters
   onMetaChange?: (meta: { total: number; page: number; totalPages: number }) => void
   onChange?: (filters: ChildrenFilters) => void
-}
-
-function calcularIdade(dataNascimento: string) {
-  const hoje = new Date()
-  const nascimento = new Date(dataNascimento)
-  let idade = hoje.getFullYear() - nascimento.getFullYear()
-  const m = hoje.getMonth() - nascimento.getMonth()
-  if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--
-  return idade
 }
 
 const AREA_LABELS = {
