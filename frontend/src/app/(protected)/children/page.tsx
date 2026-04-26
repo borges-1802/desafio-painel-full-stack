@@ -17,6 +17,12 @@ export default function ChildrenPage() {
   const [filters, setFilters] = useState<ChildrenFilters>({
     page: 1,
     bairro: searchParams.get('bairro') || undefined,
+    alertas: searchParams.get('alertas') !== null
+      ? searchParams.get('alertas') === 'true'
+      : undefined,
+    revisado: searchParams.get('revisado') !== null
+      ? searchParams.get('revisado') === 'true'
+      : undefined,
   })
 
   useEffect(() => {
@@ -39,7 +45,6 @@ export default function ChildrenPage() {
       revisado: searchParams.get('revisado') !== null
         ? searchParams.get('revisado') === 'true'
         : undefined,
-      area: searchParams.get('area') || undefined,
     }))
   }, [searchParams])
 
