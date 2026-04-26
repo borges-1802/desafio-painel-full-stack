@@ -119,7 +119,7 @@ function gerarInsights(rows, parsed, contagemAlertas, bairros) {
 
   const entries = Object.entries(bairros)
 
-  const topSaude = entries.sort((a, b) => b[1].porArea.saude - a[1].porArea.saude)[0]
+  const topSaude = [...entries].sort((a, b) => b[1].porArea.saude - a[1].porArea.saude)[0]
   if (topSaude && topSaude[1].porArea.saude > 0) {
     insights.push({
       tipo: 'critico',
@@ -127,7 +127,7 @@ function gerarInsights(rows, parsed, contagemAlertas, bairros) {
     })
   }
 
-  const topEducacao = entries.sort((a, b) => b[1].porArea.educacao - a[1].porArea.educacao)[0]
+  const topEducacao = [...entries].sort((a, b) => b[1].porArea.educacao - a[1].porArea.educacao)[0]
   if (topEducacao && topEducacao[1].porArea.educacao > 0) {
     insights.push({
       tipo: 'atencao',

@@ -61,9 +61,10 @@ export default function BairroCard() {
                         dataKey="Crianças com alertas"
                         radius={[4, 4, 0, 0]}
                         fill="#fdba74"
-                        onClick={(data: any) => {
-                            if (data?.bairroOriginal) {
-                            router.push(`/children?bairro=${encodeURIComponent(data.bairroOriginal)}`)
+                        onClick={(_data, index) => {
+                            const item = chartData[index]
+                            if (item?.bairroOriginal) {
+                                router.push(`/children?bairro=${encodeURIComponent(item.bairroOriginal)}`)
                             }
                         }}
                         style={{ cursor: 'pointer' }}
