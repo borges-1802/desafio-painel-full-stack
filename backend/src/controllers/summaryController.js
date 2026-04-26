@@ -1,6 +1,5 @@
-import { calcularIdade } from '../utils'
-
 const db = require('../database/index')
+const { calcularIdade } = require('../utils')
 
 function parseRow(row) {
   return {
