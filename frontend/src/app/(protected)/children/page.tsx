@@ -51,7 +51,7 @@ export default function ChildrenPage() {
       </div>
 
       {view === 'list'
-        ? <ChildrenList filters={filters} onMetaChange={setMeta} />
+        ? <ChildrenList filters={filters} onMetaChange={setMeta} onChange={setFilters}/>
         : <ChildrenCards filters={filters} onMetaChange={setMeta} />
       }
 

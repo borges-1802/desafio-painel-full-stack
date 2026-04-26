@@ -52,6 +52,8 @@ export interface ChildrenFilters {
     area?: string
     faixaEtaria?: string
     tipoAlerta?: string
+    orderBy?: string
+    orderDir?: 'asc' | 'desc'
 }
 
 export type ChildListItem = {
@@ -59,6 +61,7 @@ export type ChildListItem = {
     nome: string
     bairro: string
     responsavel: string
+    dataNascimento: string
     alertasCount: number
     areas: {
         saude: AreaStatus

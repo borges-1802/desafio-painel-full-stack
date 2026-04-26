@@ -4,13 +4,25 @@ import { useQuery } from '@tanstack/react-query'
 import { childrenApi } from '@/lib/api'
 import { ChildrenFilters } from '@/types'
 import { toChildListItem } from '@/lib/transform'
-import { CheckCircle, Clock, AlertTriangle } from 'lucide-react'
+import { CheckCircle, Clock, AlertTriangle, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface Props {
   filters: ChildrenFilters
   onMetaChange?: (meta: { total: number; page: number; totalPages: number }) => void
+  onChange?: (filters: ChildrenFilters) => void
+}
+
+type SortOrder = 'none' | 'asc' | 'desc'
+
+function calcularIdade(dataNascimento: string) {
+  const hoje = new Date()
+  const nascimento = new Date(dataNascimento)
+  let idade = hoje.getFullYear() - nascimento.getFullYear()
+  const m = hoje.getMonth() - nascimento.getMonth()
+  if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--
+  return idade
 }
 
 const AREA_LABELS = {
@@ -19,7 +31,11 @@ const AREA_LABELS = {
   sem_dados: { label: 'Sem dados', class: 'bg-gray-100 text-gray-500' },
 }
 
-export default function ChildrenList({ filters, onMetaChange }: Props) {
+export default function ChildrenList({ filters, onMetaChange, onChange }: Props) {
+  const [sortOrder, setSortOrder] = useState<SortOrder>(
+    filters.orderDir === 'asc' ? 'asc' : filters.orderDir === 'desc' ? 'desc' : 'none'
+  )
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ['children', filters],
     queryFn: () => childrenApi.list(filters),
@@ -28,6 +44,19 @@ export default function ChildrenList({ filters, onMetaChange }: Props) {
   useEffect(() => {
     if (data?.meta) onMetaChange?.(data.meta)
   }, [data?.meta])
+
+  function toggleSort() {
+    const next: SortOrder = sortOrder === 'none' ? 'asc' : sortOrder === 'asc' ? 'desc' : 'none'
+    setSortOrder(next)
+    onChange?.({
+      ...filters,
+      orderBy: next === 'none' ? undefined : 'nome',
+      orderDir: next === 'none' ? undefined : next,
+      page: 1,
+    })
+  }
+
+  const SortIcon = sortOrder === 'asc' ? ArrowUp : sortOrder === 'desc' ? ArrowDown : ArrowUpDown
 
   if (isLoading) {
     return (
@@ -56,7 +85,13 @@ export default function ChildrenList({ filters, onMetaChange }: Props) {
           <thead>
             <tr>
               <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <button
+                  onClick={toggleSort}
+                  className="flex items-center gap-1 hover:text-gray-900 transition-colors"
+                >
                 Nome
+                  <SortIcon className={`w-3 h-3 ${sortOrder !== 'none' ? 'text-rio-blue' : ''}`} />
+                </button>
               </th>
               <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Bairro
@@ -85,7 +120,7 @@ export default function ChildrenList({ filters, onMetaChange }: Props) {
                     </div>
                     <div>
                       <p className="text-gray-900 font-medium group-hover:text-rio-blue transition-colors">{child.nome}</p>
-                      <p className="text-gray-500 text-xs">{child.responsavel}</p>
+                      <p className="text-gray-500 text-xs">{calcularIdade(child.dataNascimento)} anos</p>
                     </div>
                   </Link>
                 </td>

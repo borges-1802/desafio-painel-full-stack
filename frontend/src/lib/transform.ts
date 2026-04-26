@@ -20,6 +20,7 @@ export function toChildListItem(child: Child): ChildListItem {
         nome: child.nome,
         bairro: child.bairro,
         responsavel: child.responsavel,
+        dataNascimento: child.data_nascimento,
         alertasCount: countAlertas(child),
         areas: {
             saude: getAreaStatus(child.saude),

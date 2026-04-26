@@ -34,7 +34,7 @@ function calcularIdade(dataNascimento) {
 }
 
 function listChildren(req, res) {
-  const { bairro, alertas, revisado, nome, area, faixaEtaria, tipoAlerta, page = 1, limit = 25 } = req.query
+  const { bairro, alertas, revisado, nome, area, faixaEtaria, tipoAlerta, orderBy, orderDir, page = 1, limit = 25 } = req.query
 
   const pageNum = Number(page)
   const limitNum = Number(limit)
@@ -111,6 +111,13 @@ function listChildren(req, res) {
 
   const total = children.length
   const start = (pageNum - 1) * limitNum
+  if (orderBy === 'nome') {
+  children = children.sort((a, b) =>
+    orderDir === 'desc'
+      ? b.nome.localeCompare(a.nome, 'pt-BR')
+      : a.nome.localeCompare(b.nome, 'pt-BR')
+  )
+}
   const data = children.slice(start, start + limitNum)
 
   return res.json({
