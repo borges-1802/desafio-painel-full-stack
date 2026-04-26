@@ -7,6 +7,7 @@ import ChildrenFiltersComponent from '@/components/children/ChildrenFilters'
 import ChildrenList from '@/components/children/ChildrenList'
 import ChildrenCards from '@/components/children/ChildrenCards'
 import { Pagination } from '@/components/children/Pagination'
+import { ViewToggle } from '@/components/children/ViewToggle'
 
 export default function ChildrenPage() {
   const searchParams = useSearchParams()
@@ -15,9 +16,13 @@ export default function ChildrenPage() {
 
   const [filters, setFilters] = useState<ChildrenFilters>({
     page: 1,
-    limit: 10,
     bairro: searchParams.get('bairro') || undefined,
   })
+
+  useEffect(() => {
+    const saved = localStorage.getItem('children-view') as 'list' | 'cards' | null
+    if (saved) setView(saved)
+  }, [])
 
   useEffect(() => {
     setFilters(prev => ({
@@ -26,6 +31,11 @@ export default function ChildrenPage() {
       bairro: searchParams.get('bairro') || undefined,
     }))
   }, [searchParams])
+
+  function handleViewChange(newView: 'list' | 'cards') {
+    setView(newView)
+    localStorage.setItem('children-view', newView)
+  }
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-8">
@@ -39,7 +49,7 @@ export default function ChildrenPage() {
               {meta ? `${meta.total} criança${meta.total !== 1 ? 's' : ''} encontrada${meta.total !== 1 ? 's' : ''}` : 'Carregando...'}
             </p>
           </div>
-         
+          <ViewToggle view={view} onChange={handleViewChange} />
         </div>
       </div>
 
@@ -51,8 +61,8 @@ export default function ChildrenPage() {
       </div>
 
       {view === 'list'
-        ? <ChildrenList filters={filters} onMetaChange={setMeta} onChange={setFilters}/>
-        : <ChildrenCards filters={filters} onMetaChange={setMeta} />
+        ? <ChildrenList filters={{ ...filters, limit: 10 }} onMetaChange={setMeta} />
+        : <ChildrenCards filters={{ ...filters, limit: 9 }} onMetaChange={setMeta} onChange={setFilters} />
       }
 
       {meta && meta.totalPages > 1 && (

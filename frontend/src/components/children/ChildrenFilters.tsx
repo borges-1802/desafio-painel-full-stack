@@ -86,17 +86,41 @@ export default function ChildrenFiltersComponent({ filters, onChange }: Props) {
         )}
       </div>
 
-      <div className="space-y-1 mb-3">
-        <label className="text-xs font-medium text-muted-foreground">Nome</label>
-        <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-          <input
-            type="text"
-            value={nomeInput}
-            onChange={(e) => setNomeInput(e.target.value)}
-            placeholder="Buscar por nome..."
-            className="w-full pl-8 pr-3 py-2 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
-          />
+      <div className="flex gap-3 mb-3 items-end">
+        <div className="space-y-1 flex-1">
+          <label className="text-xs font-medium text-muted-foreground">Nome</label>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+            <input
+              type="text"
+              value={nomeInput}
+              onChange={(e) => setNomeInput(e.target.value)}
+              placeholder="Buscar por nome..."
+              className="w-full pl-8 pr-3 py-2 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-1 w-36">
+          <label className="text-xs font-medium text-muted-foreground">Ordenar</label>
+          <Select
+            value={`${filters.orderBy || 'none'}-${filters.orderDir || 'none'}`}
+            onValueChange={(v) => {
+              const [orderBy, orderDir] = v.split('-')
+              onChange({
+                ...filters,
+                orderBy: orderBy === 'none' ? undefined : orderBy,
+                orderDir: orderDir === 'none' ? undefined : orderDir as 'asc' | 'desc',
+                page: 1,
+              })
+            }}>
+            <SelectTrigger className="w-full"><SelectValue placeholder="Padrão" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none-none">Padrão</SelectItem>
+              <SelectItem value="nome-asc">Nome A → Z</SelectItem>
+              <SelectItem value="nome-desc">Nome Z → A</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
