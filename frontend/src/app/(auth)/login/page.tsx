@@ -78,7 +78,7 @@ export default function LoginPage() {
                         </CardHeader>
 
                         <CardContent className="px-8 py-2">
-                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
 
                                 <div className="space-y-1.5">
                                     <Label htmlFor="email" className="sr-only">E-mail</Label>

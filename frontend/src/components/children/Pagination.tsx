@@ -22,7 +22,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Props) {
     const end = Math.min(totalPages - 1, currentPage + 1)
 
     for (let i = start; i <= end; i++) {
-      if (!pages.includes(i)) pages.push(i)
+      pages.push(i)
     }
 
     if (currentPage < totalPages - 2) pages.push('...')
@@ -50,7 +50,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Props) {
 
         {pages.map((page, i) =>
           page === '...' ? (
-            <span key={i} className="w-9 h-9 flex items-center justify-center text-sm">
+            <span key={`dots-${i}`} className="w-9 h-9 flex items-center justify-center text-sm">
               …
             </span>
           ) : (
