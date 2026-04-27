@@ -15,13 +15,13 @@ app.use(express.json())
 
 runSeed()
 
+app.get('/', (req, res) => {
+  res.json({ message: 'API funcionando!' })
+})
+
 app.use('/auth', authRoutes)
 app.use(authMiddleware);
 app.use('/children', childrenRoutes)
 app.use('/summary', summaryRoutes)
-
-app.get('/', (req, res) => {
-  res.json({ message: 'API funcionando!' })
-})
 
 module.exports = app
