@@ -8,6 +8,7 @@ const childrenRoutes = require('./routes/childrenRoutes')
 const summaryRoutes = require('./routes/summaryRoutes')
 
 const app = express()
+const authMiddleware = require('./middleware/auth');
 
 app.use(cors())
 app.use(express.json())
@@ -15,6 +16,7 @@ app.use(express.json())
 runSeed()
 
 app.use('/auth', authRoutes)
+app.use(authMiddleware);
 app.use('/children', childrenRoutes)
 app.use('/summary', summaryRoutes)
 
