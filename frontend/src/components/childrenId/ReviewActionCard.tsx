@@ -27,7 +27,7 @@ export function ReviewActionCard({ onReview, isLoading }: Props) {
 
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button disabled={isLoading} className="bg-rio-blue hover:bg-rio-blue-mid w-full text-foreground sm:w-auto">
+                    <Button disabled={isLoading} className="bg-rio-blue hover:bg-rio-blue-mid w-full text-white sm:w-auto">
                         {isLoading ? (
                         <>
                             <Loader2 className="w-4 h-4 animate-spin mr-2 text-foreground" />
@@ -35,7 +35,7 @@ export function ReviewActionCard({ onReview, isLoading }: Props) {
                         </>
                         ) : (
                         <>
-                            <CheckCircle2 className="w-4 h-4 mr-2 text-foreground" />
+                            <CheckCircle2 className="w-4 h-4 mr-2 text-white" />
                             Confirmar revisão
                         </>
                         )}
@@ -50,10 +50,10 @@ export function ReviewActionCard({ onReview, isLoading }: Props) {
 
                     <DialogFooter>
                         <Button variant="ghost" onClick={() => setOpen(false)}>Cancelar</Button>
-                        <Button onClick={handleConfirm} disabled={isLoading} className="bg-rio-blue hover:bg-rio-blue-mid text-foreground">
+                        <Button onClick={handleConfirm} disabled={isLoading} className="bg-rio-blue hover:bg-rio-blue-mid text-white">
                             {isLoading ? (
                                 <>
-                                <Loader2 className="w-4 h-4 animate-spin mr-2 text-foreground" />
+                                <Loader2 className="w-4 h-4 animate-spin mr-2 text-white" />
                                 Salvando...
                                 </>
                             ) : (
