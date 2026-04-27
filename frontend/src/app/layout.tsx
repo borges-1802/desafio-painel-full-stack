@@ -13,6 +13,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Painel de Vulnerabilidade Social",
   description: "Painel de acompanhamento de crianças em situação de vulnerabilidade",
+  icons: {
+    icon: '/logo.svg',
+  },
 };
 
 export default function RootLayout({
