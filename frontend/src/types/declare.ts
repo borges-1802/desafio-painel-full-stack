@@ -1,0 +1,1 @@
+declare module '@esri/arcgis-to-geojson-utils';

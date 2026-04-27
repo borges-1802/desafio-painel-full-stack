@@ -8,8 +8,9 @@ import ChildrenList from '@/components/children/ChildrenList'
 import ChildrenCards from '@/components/children/ChildrenCards'
 import { Pagination } from '@/components/children/Pagination'
 import { ViewToggle } from '@/components/children/ViewToggle'
+import { Suspense } from 'react'
 
-export default function ChildrenPage() {
+function ChildrenPageContent() {
   const searchParams = useSearchParams()
   const [view, setView] = useState<'list' | 'cards'>('list')
   const [meta, setMeta] = useState<{ total: number; page: number; totalPages: number } | null>(null)
@@ -97,5 +98,13 @@ export default function ChildrenPage() {
         </div>
       )}
     </main>
+  )
+}
+
+export default function ChildrenPage() {
+  return (
+    <Suspense>
+      <ChildrenPageContent />
+    </Suspense>
   )
 }
