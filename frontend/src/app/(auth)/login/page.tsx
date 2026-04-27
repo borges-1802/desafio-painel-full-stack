@@ -50,7 +50,7 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-200 dark:bg-gray-950">
+        <div className="min-h-screen flex flex-col bg-muted">
             <div className="w-full bg-rio-blue">
                 <div className="max-w-6xl mx-auto px-4 py-2 flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow">
@@ -66,15 +66,15 @@ export default function LoginPage() {
             <div className="flex-1 flex items-center justify-center px-4 py-12">
                 <div className="w-full max-w-md">
                     <div className="text-center mb-8">
-                        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Entrar no Painel</h1>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                        <h1 className="text-2xl font-bold text-foreground">Entrar no Painel</h1>
+                        <p className="text-muted-foreground text-sm mt-1">
                         Sistema de monitoramento de crianças em vulnerabilidade social
                         </p>
                     </div>
 
                     <Card className="overflow-hidden">
                         <CardHeader className="px-8 py-2 pb-0 rounded-none">
-                            <p className="text-rio-blue font-bold text-xl tracking-wide">Acesso restrito</p>
+                            <p className="text-primary font-bold text-xl tracking-wide">Acesso restrito</p>
                         </CardHeader>
 
                         <CardContent className="px-8 py-2">
@@ -107,7 +107,7 @@ export default function LoginPage() {
                                         <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                         aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                                         >
                                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -127,7 +127,7 @@ export default function LoginPage() {
 
                                 <Button
                                 type="submit"
-                                className="w-full bg-rio-blue hover:bg-rio-blue-mid shadow-md"
+                                className="w-full bg-rio-blue hover:bg-rio-blue-mid text-white shadow-md"
                                 disabled={isSubmitting}
                                 >
                                 {isSubmitting
@@ -144,7 +144,7 @@ export default function LoginPage() {
                         </CardContent>
                     </Card>
 
-                    <p className="text-center text-xs text-gray-400 dark:text-gray-600 mt-6">
+                    <p className="text-center text-xs text-muted-foreground mt-6">
                     Prefeitura do Rio de Janeiro · Uso restrito a servidores autorizados
                     </p>
                 </div>
