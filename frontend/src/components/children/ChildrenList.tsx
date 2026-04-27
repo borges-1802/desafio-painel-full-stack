@@ -52,7 +52,7 @@ export default function ChildrenList({ filters, onMetaChange }: Props) {
   const children = data.data.map(toChildListItem)
 
   return (
-    <div className="-mx-4 sm:mx-0">
+    <div className="w-full overflow-x-auto">
       <div className="inline-block min-w-full shadow-sm rounded-lg overflow-hidden">
         <table className="min-w-full leading-normal">
           <thead>
@@ -82,7 +82,7 @@ export default function ChildrenList({ filters, onMetaChange }: Props) {
               <tr key={child.id} className="hover:bg-accent transition-colors">
                 <td className="px-5 py-4 border-b border-border bg-card text-sm">
                   <Link href={`/children/${child.id}`} className="flex items-center gap-2 group">
-                    <div className="w-8 h-8 rounded-full bg-rio-blue/10 text-rio-blue flex items-center justify-center font-semibold text-xs shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-rio-blue/10 text-rio-blue hidden sm:flex items-center justify-center font-semibold text-xs shrink-0">
                       {child.nome.charAt(0)}
                     </div>
                     <div>
