@@ -1,14 +1,95 @@
 # Desafio Técnico - Full Stack Pleno da Prefeitura do Rio
 
-Adicionando documentação do backend atual:
+Painel interno para monitoramento e acompanhamento de crianças em situação de vulnerabilidade. O sistema consolida dados de Saúde, Educação e Assistência Social em uma interface intuitiva com mapa de calor e insights automáticos.
 
-## Dependencias do backend
-- **Express** - framework HTTP para criação das rotas e servidor
-- **better-sqlite3** - banco de dados SQLite simples e sem servidor separado
-- **jsonwebtoken** - geração e verificação de tokens JWT para autenticação
-- **dotenv** - gerenciamento de variáveis de ambiente
-- **cors** - liberação de requisições entre frontend (3000) e backend (3001)
-- **nodemon** - reinício automático do servidor em desenvolvimento
+## Credenciais de acesso
+
+| Campo | Valor |
+|-------|-------|
+| E-mail | `tecnico@prefeitura.rio` |
+| Senha | `painel@2024` |
+
+## Acesso ao site com deploy
+
+| Campo | Valor |
+|-------|-------|
+| Site | https://desafio-painel-prefeitura-jvborges.vercel.app/ |
+| Backend | https://desafio-painel-full-stack.onrender.com/ |
+
+> Primeiro acesso: o backend está no plano gratuito do Render, portanto é necessário esperar pelo menos até 60 segundos, logo após pode dar F5.
+
+
+## Início rápido com Docker
+
+> Pré-requisito: Docker e Docker Compose instalados.
+
+```bash
+git clone https://github.com/borges-1802/desafio-painel-full-stack.git
+cd desafio-painel-full-stack
+docker compose up --build
+```
+
+| Serviço | URL |
+|---------|-----|
+| Frontend | http://localhost:3000 |
+| Backend | http://localhost:3001 |
+
+---
+
+## Rodar sem Docker
+
+### Backend
+
+```bash
+cd backend
+npm install
+npm run dev      # porta 3001
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev      # porta 3000
+```
+
+---
+
+## Stack
+| Camada | Tecnologia |
+|--------|-----------|
+| Frontend | Next.js 15 (App Router), TypeScript, Tailwind CSS |
+| Componentes UI | shadcn/ui, Radix UI, Lucide React, Sonner |
+| Estado / dados | TanStack Query (React Query), Axios |
+| Formulários | React Hook Form + Zod |
+| Visualização | Leaflet (Mapas), Recharts (Gráfco), Next-Theme |
+| Backend | Node.js, Express |
+| Banco de Dados | SQLite better-sqlite3 |
+| Segurança | JWT + Cookies HttpOnly |
+| Testes | Jest + Supertest |
+
+## Testes
+
+### Backend - Jest + Supertest
+
+```bash
+cd backend
+npm test
+```
+
+31 Testes passaram com 4 suítes.
+
+### Frontend - Vitest + React Testing Library
+
+```bash
+cd frontend
+npm run test:run
+```
+
+42 testes de componentes passaram.
+
+---
 
 ## Estrutura do banco de dados
 
@@ -113,19 +194,6 @@ npm install
 npm run dev
 ```
 
-## Dependências do frontend
-
-- **Next.js 14+** e **Tailwind CSS**
-- **shadcn/ui** - biblioteca de componentes acessíveis baseada em Radix UI
-- **axios** - cliente HTTP para consumo da API
-- **@tanstack/react-query** - gerenciamento de cache e estado de dados assíncronos
-- **react-hook-form** - gerenciamento de formulários
-- **zod** - validação de esquemas e formulários
-- **lucide-react** - ícones
-- **recharts** - gráficos e visualizações
-- **sonner** - notificações de feedback visual
-
-
 ### Decisões arquiteturais
 
 - **Cookies** ao invés de `localStorage` para armazenar o JWT que é mais seguro e funciona no middleware server-side do Next.js
@@ -177,10 +245,55 @@ Controller principal que executa um único loop sobre todos os registros calcula
 
 A abordagem de loop único evita múltiplas passagens pelo array que ocorreriam ao usar `.filter()`, `.map()` ou `.reduce()` separados para cada métrica. Com 25 registros a diferença é imperceptível, mas a decisão documenta uma preocupação com performance e escalabilidade — se o volume de dados crescer, o custo computacional cresce linearmente e não multiplicado pelo número de métricas.
 
-### Como rodar
+## Mapa de Calor por Bairro
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+O dashboard conta com um mapa de calor interativo dos bairros do Rio de Janeiro, construído com **Leaflet** e dados geoespaciais oficiais da Prefeitura do Rio.
+
+### Fonte dos dados geográficos
+
+Os polígonos dos bairros são carregados dinamicamente da API oficial do IPP (Instituto Pereira Passos):
+https://pgeo3.rio.rj.gov.br/arcgis/rest/services/Cartografia/Limites_administrativos/MapServer/4/query
+
+Os dados são retornados no formato ESRI JSON e convertidos para GeoJSON padrão usando a biblioteca `@esri/arcgis-to-geojson-utils`.
+
+### Funcionalidades
+
+- **Mapa de calor** — cores por intensidade de alertas por bairro (amarelo → laranja → vermelho)
+- **Clique no bairro** — redireciona para a lista de crianças filtrada pelo bairro selecionado
+- **Tooltip rico** — exibe total de crianças, percentual de alertas e os 3 principais tipos de alerta do bairro
+- **Highlight** — bairro selecionado recebe borda azul e os demais ficam transparentes
+- **Bairros críticos** — borda vermelha automática em bairros com mais de 70% de alertas
+- **Bairros sem dados** — exibidos com preenchimento transparente e borda cinza
+
+### Decisões técnicas
+
+- **`dynamic` com `ssr: false`** — o Leaflet usa `window` e `document` diretamente, portanto não pode rodar no servidor. O componente é carregado dinamicamente apenas no browser
+- **Cache global do GeoJSON** — o fetch da API é iniciado assim que o arquivo é importado e o resultado é cacheado em memória, evitando múltiplas requisições
+- **`geoLayerRef`** — o layer do Leaflet é mantido em uma ref e apenas os estilos são atualizados quando o bairro selecionado muda, sem recriar o mapa
+- **Normalização de nomes** — os nomes dos bairros são normalizados removendo acentos e convertendo para minúsculas antes da comparação, evitando inconsistências entre os dados do backend e do GeoJSON
+
+## Página de Crianças
+
+### Componentes
+
+**`ChildrenFilters.tsx`**
+Painel de filtros com 7 opções: busca por nome (com debounce de 350ms), bairro, faixa etária, alertas, área de alerta, tipo de alerta e revisão. Inclui ordenação alfabética integrada ao nome, contador de filtros ativos e tags clicáveis para remover filtros individualmente.
+
+**`ChildrenList.tsx`**
+Visualização em tabela com colunas de nome, bairro, status por área (saúde, educação, assistência) e status de revisão. Exibe a idade calculada da criança. Colunas de área são ocultadas em mobile.
+
+**`ChildrenCards.tsx`**
+Visualização em grid de cards com borda colorida por severidade (laranja para alertas, verde para ok, cinza para sem dados). Cada card exibe nome, idade, bairro, status por área com ícone e badge de revisão. Inclui ordenação por nome.
+
+**`ViewToggle.tsx`**
+Toggle entre visualização lista e cards. O modo escolhido é persistido no `localStorage` — ao voltar de uma página de detalhe, o usuário retorna ao mesmo modo de visualização.
+
+**`Pagination.tsx`**
+Paginação com reticências para muitas páginas, `aria-label` e `aria-current` para acessibilidade. Lista usa 10 itens por página, cards usam 9 (grid 3x3).
+
+### Decisões
+
+- **Debounce no nome** — evita requisição a cada tecla digitada, aguarda 350ms de inatividade
+- **Ordenação no backend** — a ordenação alfabética é feita no servidor para garantir consistência entre páginas
+- **Persistência do modo de visualização** — `localStorage` mantém a preferência do usuário entre navegações
+- **Limites diferentes por modo** — lista usa 10 itens (tabela) e cards usam 9 (grid 3x3 completo)
