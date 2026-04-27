@@ -43,8 +43,6 @@ function runSeed() {
       revisado: child.revisado ? 1 : 0,
     })
   }
-
-  console.log(`${children.length} crianças carregadas no banco!`)
 }
 
 module.exports = runSeed
