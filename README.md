@@ -25,7 +25,30 @@ Se a interface carregar mas os dados não aparecerem, aguarde cerca de 1 minuto 
 
 ### Com Docker (recomendado)
 
+Primeiro instale as dependências no `frontend` e no `backend`.
 ```bash
+cd frontend
+npm install
+cd ..
+cd backend
+npm install
+```
+E depois inicie o docker.
+
+```bash
+docker compose up --build
+```
+
+Caso dê erro de dependência, faça o seguinte procedimento:
+```bash
+cd frontend
+rm -rf node_modules package-lock.json
+npm install # reinstala package.json corretamente
+cd ..
+cd backend
+rm -rf node_modules package-lock.json
+npm install # reinstala package.json corretamente
+cd ..
 docker compose up --build
 ```
 
@@ -68,11 +91,11 @@ Senha:  painel@2024
 │  │  (standalone)    │─────▶│  + better-sqlite3    │ │
 │  │  :3000           │      │  :3001               │ │
 │  └──────────────────┘      └──────────────────────┘ │
-│                                      │               │
-│                              ┌───────▼──────┐        │
-│                              │  banco.db    │        │
-│                              │  (volume)    │        │
-│                              └──────────────┘        │
+│                                      │              │
+│                              ┌───────▼──────┐       │
+│                              │  banco.db    │       │
+│                              │  (volume)    │       │
+│                              └──────────────┘       │
 └─────────────────────────────────────────────────────┘
 ```
 
