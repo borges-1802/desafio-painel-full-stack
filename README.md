@@ -12,6 +12,11 @@ Sistema de monitoramento de crianças em situação de vulnerabilidade social. P
 | Frontend | https://desafio-painel-prefeitura-jvborges.vercel.app/ |
 | Backend | https://desafio-painel-full-stack.onrender.com/ |
 
+**Credenciais de acesso:**
+```
+E-mail: tecnico@prefeitura.rio
+Senha:  painel@2024
+```
 
 ## Aviso importante - cold start do backend
 
@@ -70,12 +75,6 @@ npm run dev
 cd frontend
 npm install
 npm run dev
-```
-
-**Credenciais de acesso:**
-```
-E-mail: tecnico@prefeitura.rio
-Senha:  painel@2024
 ```
 
 ---
